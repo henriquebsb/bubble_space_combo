@@ -1,5 +1,6 @@
 import { Bubble } from './bubble';
 import { MathProblem } from './mathProblem';
+import { audioManager } from './main';
 
 interface PlayerScore {
     level: number;
@@ -191,10 +192,20 @@ export class Game {
                     this.bubbles = [];
                     this.score += 20;
                     this.currentMathProblem = new MathProblem(this.selectedOperators, this.maxDigits);
+                    
+                    // Play correct answer sound
+                    if (audioManager) {
+                        audioManager.playSoundEffect('correct_answer');
+                    }
                 } else {
                     // Only remove the clicked bubble for wrong answers
                     this.bubbles.splice(i, 1);
                     this.score -= 40; // Remove 40 points for wrong answer
+                    
+                    // Play wrong answer sound
+                    if (audioManager) {
+                        audioManager.playSoundEffect('wrong_answer');
+                    }
                     
                     // If score reaches 0 or below, lose a life
                     if (this.score <= 0) {
@@ -260,6 +271,11 @@ export class Game {
                 if (bubble.isCorrect) {
                     this.lives--;
                     this.updateUI();
+                    
+                    // Play bubble pop sound for losing a life
+                    if (audioManager) {
+                        audioManager.playSoundEffect('bubble_pop');
+                    }
                     
                     if (this.lives <= 0) {
                         this.gameOver();
@@ -327,8 +343,17 @@ export class Game {
     }
 
     private gameOver(): void {
+        console.log('Game Over - stopping background music...');
         this.gameRunning = false;
         cancelAnimationFrame(this.animationId);
+
+        // Stop background music when game ends
+        if (audioManager) {
+            console.log('Audio manager found, calling stopBackgroundMusic...');
+            audioManager.stopBackgroundMusic();
+        } else {
+            console.log('Audio manager not found!');
+        }
 
         // Save the current score before resetting (only if score > 0 and level > 1)
         if (this.score > 0 && this.level > 1) {
@@ -568,9 +593,18 @@ export class Game {
     }
 
     private endGame(): void {
+        console.log('End Game - stopping background music...');
         // Stop the current game
         this.gameRunning = false;
         cancelAnimationFrame(this.animationId);
+
+        // Stop background music when game ends
+        if (audioManager) {
+            console.log('Audio manager found, calling stopBackgroundMusic...');
+            audioManager.stopBackgroundMusic();
+        } else {
+            console.log('Audio manager not found!');
+        }
 
         // Save the current score before resetting (only if score > 0 and level > 1)
         if (this.score > 0 && this.level > 1) {
@@ -611,6 +645,11 @@ export class Game {
         this.lastBubbleTime = performance.now();
         this.currentMathProblem = new MathProblem(this.selectedOperators, this.maxDigits);
         
+        // Start background music when game begins
+        if (audioManager) {
+            audioManager.startGameMusic();
+        }
+        
         // Show end game button
         const endGameBtn = document.getElementById('endGameBtn');
         if (endGameBtn) {
@@ -624,6 +663,11 @@ export class Game {
         // Stop the current game if it's running
         this.gameRunning = false;
         cancelAnimationFrame(this.animationId);
+
+        // Stop background music when restarting
+        if (audioManager) {
+            audioManager.stopBackgroundMusic();
+        }
 
         // Reset game state completely
         this.bubbles = [];

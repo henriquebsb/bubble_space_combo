@@ -1,5 +1,6 @@
 import { Game } from './game';
 import { NightSky } from './nightSky';
+import { AudioManager } from './audioManager';
 
 // Make restartGame function globally available
 declare global {
@@ -10,8 +11,12 @@ declare global {
 
 let game: Game;
 let nightSky: NightSky;
+export let audioManager: AudioManager;
 
 function init() {
+    // Initialize audio manager
+    audioManager = new AudioManager();
+    
     // Initialize night sky background
     nightSky = new NightSky();
     

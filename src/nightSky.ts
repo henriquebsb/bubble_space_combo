@@ -95,28 +95,6 @@ export class NightSky {
     private generateConstellations(): void {
         this.constellations = [
             {
-                name: 'Big Dipper',
-                stars: [
-                    { x: 100, y: 150 },
-                    { x: 150, y: 120 },
-                    { x: 200, y: 100 },
-                    { x: 250, y: 110 },
-                    { x: 300, y: 130 },
-                    { x: 350, y: 160 },
-                    { x: 400, y: 200 }
-                ],
-                lines: [
-                    { from: 0, to: 1 },
-                    { from: 1, to: 2 },
-                    { from: 2, to: 3 },
-                    { from: 3, to: 4 },
-                    { from: 4, to: 5 },
-                    { from: 5, to: 6 }
-                ],
-                color: '#ffffff',
-                opacity: 0.3
-            },
-            {
                 name: 'Little Dipper',
                 stars: [
                     { x: 600, y: 100 },
