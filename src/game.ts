@@ -1,6 +1,12 @@
 import { Bubble } from './bubble';
 import { MathProblem } from './mathProblem';
 
+interface PlayerScore {
+    level: number;
+    score: number;
+    date: string;
+}
+
 export class Game {
     private canvas!: HTMLCanvasElement;
     private ctx!: CanvasRenderingContext2D;
@@ -56,6 +62,15 @@ export class Game {
         if (endGameBtn) {
             endGameBtn.addEventListener('click', () => {
                 this.endGame();
+            });
+        }
+
+        // Handle clear scores button
+        const clearScoresBtn = document.getElementById('clearScoresBtn');
+        if (clearScoresBtn) {
+            clearScoresBtn.addEventListener('click', () => {
+                this.clearScores();
+                alert('All scores cleared!');
             });
         }
     }
@@ -280,6 +295,17 @@ export class Game {
         this.gameRunning = false;
         cancelAnimationFrame(this.animationId);
 
+        // Save the current score before resetting
+        const currentScore: PlayerScore = {
+            level: this.level,
+            score: this.score,
+            date: new Date().toLocaleDateString()
+        };
+        this.saveScore(currentScore);
+
+        // Show game over screen with rankings
+        this.showGameOverScreen(currentScore);
+
         // Reset game state completely
         this.bubbles = [];
         this.score = 0;
@@ -291,9 +317,80 @@ export class Game {
 
         // Update UI to reflect reset state
         this.updateUI();
+    }
 
-        // Show operator selection instead of game over screen
-        this.showOperatorSelection();
+    private saveScore(score: PlayerScore): void {
+        const scores = this.getScores();
+        scores.push(score);
+        // Keep only top 10 scores
+        scores.sort((a, b) => {
+            if (a.level !== b.level) {
+                return b.level - a.level; // Higher level first
+            }
+            return b.score - a.score; // Higher score first
+        });
+        scores.splice(10); // Keep only top 10
+        localStorage.setItem('mathBubbleScores', JSON.stringify(scores));
+    }
+
+    private getScores(): PlayerScore[] {
+        const scores = localStorage.getItem('mathBubbleScores');
+        return scores ? JSON.parse(scores) : [];
+    }
+
+    // Method to clear all scores (for testing purposes)
+    public clearScores(): void {
+        localStorage.removeItem('mathBubbleScores');
+    }
+
+    private showGameOverScreen(finalScore: PlayerScore): void {
+        const gameOver = document.getElementById('gameOver');
+        const finalScoreElement = document.getElementById('finalScore');
+        const finalLevelElement = document.getElementById('finalLevel');
+        
+        if (gameOver && finalScoreElement && finalLevelElement) {
+            finalScoreElement.textContent = finalScore.score.toString();
+            finalLevelElement.textContent = finalScore.level.toString();
+            
+            // Show rankings
+            this.displayRankings();
+            
+            gameOver.style.display = 'block';
+        }
+    }
+
+    private displayRankings(): void {
+        const rankingsContainer = document.getElementById('rankingsContainer');
+        if (!rankingsContainer) return;
+
+        const scores = this.getScores();
+        
+        if (scores.length === 0) {
+            rankingsContainer.innerHTML = '<p>No scores yet. Be the first to set a record!</p>';
+            return;
+        }
+
+        let rankingsHTML = '<h3>Top Rankings</h3><div class="rankings-list">';
+        
+        scores.forEach((score, index) => {
+            const rank = index + 1;
+            const medal = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : `${rank}.`;
+            const isCurrentScore = score.date === new Date().toLocaleDateString() && 
+                                 score.level === scores[0].level && 
+                                 score.score === scores[0].score;
+            
+            rankingsHTML += `
+                <div class="ranking-item ${isCurrentScore ? 'current-score' : ''}">
+                    <span class="rank">${medal}</span>
+                    <span class="level">Level ${score.level}</span>
+                    <span class="score">${score.score} pts</span>
+                    <span class="date">${score.date}</span>
+                </div>
+            `;
+        });
+        
+        rankingsHTML += '</div>';
+        rankingsContainer.innerHTML = rankingsHTML;
     }
 
     private showOperatorSelection(): void {

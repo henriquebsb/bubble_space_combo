@@ -186,6 +186,59 @@
         #gameOver button:hover {
             background: #45b7d1;
         }
+
+        #rankingsContainer {
+            margin-top: 20px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        #rankingsContainer h3 {
+            margin: 0 0 15px 0;
+            font-size: 20px;
+            color: #4ecdc4;
+        }
+
+        .rankings-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .ranking-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .ranking-item .rank {
+            font-weight: bold;
+            min-width: 30px;
+        }
+
+        .ranking-item .level {
+            color: #4ecdc4;
+            font-weight: bold;
+        }
+
+        .ranking-item .score {
+            color: #ff6b6b;
+            font-weight: bold;
+        }
+
+        .ranking-item .date {
+            color: #ccc;
+            font-size: 12px;
+        }
+
+        .ranking-item.current-score {
+            background: rgba(78, 205, 196, 0.2);
+            border: 2px solid #4ecdc4;
+        }
     </style>
 </head>
 <body>
@@ -218,6 +271,7 @@
             </div>
             
             <button id="startGameBtn" disabled>Start Game</button>
+            <button id="clearScoresBtn" style="margin-top: 10px; background: #ff6b6b; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer;">Clear Scores</button>
         </div>
 
         <div id="ui">
@@ -229,7 +283,9 @@
 
         <div id="gameOver">
             <h2>Game Over!</h2>
+            <p>Final Level: <span id="finalLevel">1</span></p>
             <p>Final Score: <span id="finalScore">0</span></p>
+            <div id="rankingsContainer"></div>
             <button onclick="restartGame()">Play Again</button>
         </div>
     </div>

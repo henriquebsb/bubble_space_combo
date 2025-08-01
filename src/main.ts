@@ -16,6 +16,11 @@ function init() {
 
 function restartGame() {
     if (game) {
+        // Hide the game over screen
+        const gameOver = document.getElementById('gameOver');
+        if (gameOver) {
+            gameOver.style.display = 'none';
+        }
         game.restart();
     }
 }
