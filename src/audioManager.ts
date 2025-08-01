@@ -2,6 +2,15 @@ export class AudioManager {
     private backgroundAudio: HTMLAudioElement | null = null;
     private lossAudio: HTMLAudioElement | null = null;
     private tripleComboAudio: HTMLAudioElement | null = null;
+    private superComboAudio: HTMLAudioElement | null = null;
+    private hyperComboAudio: HTMLAudioElement | null = null;
+    private brutalComboAudio: HTMLAudioElement | null = null;
+    private masterComboAudio: HTMLAudioElement | null = null;
+    private awesomeComboAudio: HTMLAudioElement | null = null;
+    private blasterComboAudio: HTMLAudioElement | null = null;
+    private monsterComboAudio: HTMLAudioElement | null = null;
+    private kingComboAudio: HTMLAudioElement | null = null;
+    private ultraComboAudio: HTMLAudioElement | null = null;
     private audioContext: AudioContext | null = null;
     private volume = 0.3;
 
@@ -30,6 +39,51 @@ export class AudioManager {
             this.tripleComboAudio.volume = this.volume;
             this.tripleComboAudio.preload = 'auto';
             
+            // Initialize super combo audio
+            this.superComboAudio = new Audio();
+            this.superComboAudio.volume = this.volume;
+            this.superComboAudio.preload = 'auto';
+            
+            // Initialize hyper combo audio
+            this.hyperComboAudio = new Audio();
+            this.hyperComboAudio.volume = this.volume;
+            this.hyperComboAudio.preload = 'auto';
+            
+            // Initialize brutal combo audio
+            this.brutalComboAudio = new Audio();
+            this.brutalComboAudio.volume = this.volume;
+            this.brutalComboAudio.preload = 'auto';
+            
+            // Initialize master combo audio
+            this.masterComboAudio = new Audio();
+            this.masterComboAudio.volume = this.volume;
+            this.masterComboAudio.preload = 'auto';
+            
+            // Initialize awesome combo audio
+            this.awesomeComboAudio = new Audio();
+            this.awesomeComboAudio.volume = this.volume;
+            this.awesomeComboAudio.preload = 'auto';
+            
+            // Initialize blaster combo audio
+            this.blasterComboAudio = new Audio();
+            this.blasterComboAudio.volume = this.volume;
+            this.blasterComboAudio.preload = 'auto';
+            
+            // Initialize monster combo audio
+            this.monsterComboAudio = new Audio();
+            this.monsterComboAudio.volume = this.volume;
+            this.monsterComboAudio.preload = 'auto';
+            
+            // Initialize king combo audio
+            this.kingComboAudio = new Audio();
+            this.kingComboAudio.volume = this.volume;
+            this.kingComboAudio.preload = 'auto';
+            
+            // Initialize ultra combo audio
+            this.ultraComboAudio = new Audio();
+            this.ultraComboAudio.volume = this.volume;
+            this.ultraComboAudio.preload = 'auto';
+            
             // Load background music
             this.loadBackgroundMusic();
             
@@ -38,6 +92,33 @@ export class AudioManager {
             
             // Load triple combo audio
             this.loadTripleComboAudio();
+            
+            // Load super combo audio
+            this.loadSuperComboAudio();
+            
+            // Load hyper combo audio
+            this.loadHyperComboAudio();
+            
+            // Load brutal combo audio
+            this.loadBrutalComboAudio();
+            
+            // Load master combo audio
+            this.loadMasterComboAudio();
+            
+            // Load awesome combo audio
+            this.loadAwesomeComboAudio();
+            
+            // Load blaster combo audio
+            this.loadBlasterComboAudio();
+            
+            // Load monster combo audio
+            this.loadMonsterComboAudio();
+            
+            // Load king combo audio
+            this.loadKingComboAudio();
+            
+            // Load ultra combo audio
+            this.loadUltraComboAudio();
             
             console.log('Audio manager initialized successfully');
             
@@ -151,6 +232,312 @@ export class AudioManager {
         tryNextFormat();
     }
 
+    private loadSuperComboAudio() {
+        if (!this.superComboAudio) return;
+
+        // Try different audio formats for super combo audio
+        const superComboAudioFormats = [
+            '/sounds/4-super-combo.mp3',
+            '/sounds/4-super-combo.ogg',
+            '/sounds/4-super-combo.wav'
+        ];
+
+        let currentFormatIndex = 0;
+
+        const tryNextFormat = () => {
+            if (currentFormatIndex < superComboAudioFormats.length) {
+                this.superComboAudio!.src = superComboAudioFormats[currentFormatIndex];
+                currentFormatIndex++;
+            } else {
+                console.log('All super combo audio formats failed');
+            }
+        };
+
+        this.superComboAudio.addEventListener('canplaythrough', () => {
+            console.log('Super combo audio loaded successfully');
+        });
+
+        this.superComboAudio.addEventListener('error', () => {
+            console.log(`Super combo audio format failed, trying next...`);
+            tryNextFormat();
+        });
+
+        // Start with first format
+        tryNextFormat();
+    }
+
+    private loadHyperComboAudio() {
+        if (!this.hyperComboAudio) return;
+
+        // Try different audio formats for hyper combo audio
+        const hyperComboAudioFormats = [
+            '/sounds/5-hyper-combo.mp3',
+            '/sounds/5-hyper-combo.ogg',
+            '/sounds/5-hyper-combo.wav'
+        ];
+
+        let currentFormatIndex = 0;
+
+        const tryNextFormat = () => {
+            if (currentFormatIndex < hyperComboAudioFormats.length) {
+                this.hyperComboAudio!.src = hyperComboAudioFormats[currentFormatIndex];
+                currentFormatIndex++;
+            } else {
+                console.log('All hyper combo audio formats failed');
+            }
+        };
+
+        this.hyperComboAudio.addEventListener('canplaythrough', () => {
+            console.log('Hyper combo audio loaded successfully');
+        });
+
+        this.hyperComboAudio.addEventListener('error', () => {
+            console.log(`Hyper combo audio format failed, trying next...`);
+            tryNextFormat();
+        });
+
+        // Start with first format
+        tryNextFormat();
+    }
+
+    private loadBrutalComboAudio() {
+        if (!this.brutalComboAudio) return;
+
+        // Try different audio formats for brutal combo audio
+        const brutalComboAudioFormats = [
+            '/sounds/6-brutal-combo.mp3',
+            '/sounds/6-brutal-combo.ogg',
+            '/sounds/6-brutal-combo.wav'
+        ];
+
+        let currentFormatIndex = 0;
+
+        const tryNextFormat = () => {
+            if (currentFormatIndex < brutalComboAudioFormats.length) {
+                this.brutalComboAudio!.src = brutalComboAudioFormats[currentFormatIndex];
+                currentFormatIndex++;
+            } else {
+                console.log('All brutal combo audio formats failed');
+            }
+        };
+
+        this.brutalComboAudio.addEventListener('canplaythrough', () => {
+            console.log('Brutal combo audio loaded successfully');
+        });
+
+        this.brutalComboAudio.addEventListener('error', () => {
+            console.log(`Brutal combo audio format failed, trying next...`);
+            tryNextFormat();
+        });
+
+        // Start with first format
+        tryNextFormat();
+    }
+
+    private loadMasterComboAudio() {
+        if (!this.masterComboAudio) return;
+
+        // Try different audio formats for master combo audio
+        const masterComboAudioFormats = [
+            '/sounds/7-master-combo.mp3',
+            '/sounds/7-master-combo.ogg',
+            '/sounds/7-master-combo.wav'
+        ];
+
+        let currentFormatIndex = 0;
+
+        const tryNextFormat = () => {
+            if (currentFormatIndex < masterComboAudioFormats.length) {
+                this.masterComboAudio!.src = masterComboAudioFormats[currentFormatIndex];
+                currentFormatIndex++;
+            } else {
+                console.log('All master combo audio formats failed');
+            }
+        };
+
+        this.masterComboAudio.addEventListener('canplaythrough', () => {
+            console.log('Master combo audio loaded successfully');
+        });
+
+        this.masterComboAudio.addEventListener('error', () => {
+            console.log(`Master combo audio format failed, trying next...`);
+            tryNextFormat();
+        });
+
+        // Start with first format
+        tryNextFormat();
+    }
+
+    private loadAwesomeComboAudio() {
+        if (!this.awesomeComboAudio) return;
+
+        // Try different audio formats for awesome combo audio
+        const awesomeComboAudioFormats = [
+            '/sounds/8-awesome-combo.mp3',
+            '/sounds/8-awesome-combo.ogg',
+            '/sounds/8-awesome-combo.wav'
+        ];
+
+        let currentFormatIndex = 0;
+
+        const tryNextFormat = () => {
+            if (currentFormatIndex < awesomeComboAudioFormats.length) {
+                this.awesomeComboAudio!.src = awesomeComboAudioFormats[currentFormatIndex];
+                currentFormatIndex++;
+            } else {
+                console.log('All awesome combo audio formats failed');
+            }
+        };
+
+        this.awesomeComboAudio.addEventListener('canplaythrough', () => {
+            console.log('Awesome combo audio loaded successfully');
+        });
+
+        this.awesomeComboAudio.addEventListener('error', () => {
+            console.log(`Awesome combo audio format failed, trying next...`);
+            tryNextFormat();
+        });
+
+        // Start with first format
+        tryNextFormat();
+    }
+
+    private loadBlasterComboAudio() {
+        if (!this.blasterComboAudio) return;
+
+        // Try different audio formats for blaster combo audio
+        const blasterComboAudioFormats = [
+            '/sounds/9-blaster-combo.mp3',
+            '/sounds/9-blaster-combo.ogg',
+            '/sounds/9-blaster-combo.wav'
+        ];
+
+        let currentFormatIndex = 0;
+
+        const tryNextFormat = () => {
+            if (currentFormatIndex < blasterComboAudioFormats.length) {
+                this.blasterComboAudio!.src = blasterComboAudioFormats[currentFormatIndex];
+                currentFormatIndex++;
+            } else {
+                console.log('All blaster combo audio formats failed');
+            }
+        };
+
+        this.blasterComboAudio.addEventListener('canplaythrough', () => {
+            console.log('Blaster combo audio loaded successfully');
+        });
+
+        this.blasterComboAudio.addEventListener('error', () => {
+            console.log(`Blaster combo audio format failed, trying next...`);
+            tryNextFormat();
+        });
+
+        // Start with first format
+        tryNextFormat();
+    }
+
+    private loadMonsterComboAudio() {
+        if (!this.monsterComboAudio) return;
+
+        // Try different audio formats for monster combo audio
+        const monsterComboAudioFormats = [
+            '/sounds/10-monster-combo.mp3',
+            '/sounds/10-monster-combo.ogg',
+            '/sounds/10-monster-combo.wav'
+        ];
+
+        let currentFormatIndex = 0;
+
+        const tryNextFormat = () => {
+            if (currentFormatIndex < monsterComboAudioFormats.length) {
+                this.monsterComboAudio!.src = monsterComboAudioFormats[currentFormatIndex];
+                currentFormatIndex++;
+            } else {
+                console.log('All monster combo audio formats failed');
+            }
+        };
+
+        this.monsterComboAudio.addEventListener('canplaythrough', () => {
+            console.log('Monster combo audio loaded successfully');
+        });
+
+        this.monsterComboAudio.addEventListener('error', () => {
+            console.log(`Monster combo audio format failed, trying next...`);
+            tryNextFormat();
+        });
+
+        // Start with first format
+        tryNextFormat();
+    }
+
+    private loadKingComboAudio() {
+        if (!this.kingComboAudio) return;
+
+        // Try different audio formats for king combo audio
+        const kingComboAudioFormats = [
+            '/sounds/11-king-combo.mp3',
+            '/sounds/11-king-combo.ogg',
+            '/sounds/11-king-combo.wav'
+        ];
+
+        let currentFormatIndex = 0;
+
+        const tryNextFormat = () => {
+            if (currentFormatIndex < kingComboAudioFormats.length) {
+                this.kingComboAudio!.src = kingComboAudioFormats[currentFormatIndex];
+                currentFormatIndex++;
+            } else {
+                console.log('All king combo audio formats failed');
+            }
+        };
+
+        this.kingComboAudio.addEventListener('canplaythrough', () => {
+            console.log('King combo audio loaded successfully');
+        });
+
+        this.kingComboAudio.addEventListener('error', () => {
+            console.log(`King combo audio format failed, trying next...`);
+            tryNextFormat();
+        });
+
+        // Start with first format
+        tryNextFormat();
+    }
+
+    private loadUltraComboAudio() {
+        if (!this.ultraComboAudio) return;
+
+        // Try different audio formats for ultra combo audio
+        const ultraComboAudioFormats = [
+            '/sounds/12-ultra-combo.mp3',
+            '/sounds/12-ultra-combo.ogg',
+            '/sounds/12-ultra-combo.wav'
+        ];
+
+        let currentFormatIndex = 0;
+
+        const tryNextFormat = () => {
+            if (currentFormatIndex < ultraComboAudioFormats.length) {
+                this.ultraComboAudio!.src = ultraComboAudioFormats[currentFormatIndex];
+                currentFormatIndex++;
+            } else {
+                console.log('All ultra combo audio formats failed');
+            }
+        };
+
+        this.ultraComboAudio.addEventListener('canplaythrough', () => {
+            console.log('Ultra combo audio loaded successfully');
+        });
+
+        this.ultraComboAudio.addEventListener('error', () => {
+            console.log(`Ultra combo audio format failed, trying next...`);
+            tryNextFormat();
+        });
+
+        // Start with first format
+        tryNextFormat();
+    }
+
     private setupBackgroundMusic() {
         if (!this.backgroundAudio) return;
 
@@ -225,6 +612,114 @@ export class AudioManager {
             });
         } else {
             console.log('Triple combo audio not ready');
+        }
+    }
+
+    public playSuperComboAudio() {
+        console.log('Playing super combo audio...');
+        if (this.superComboAudio && this.superComboAudio.readyState >= 2) {
+            console.log('Super combo audio is ready, starting playback...');
+            this.superComboAudio.play().catch(error => {
+                console.log('Super combo audio playback failed:', error);
+            });
+        } else {
+            console.log('Super combo audio not ready');
+        }
+    }
+
+    public playHyperComboAudio() {
+        console.log('Playing hyper combo audio...');
+        if (this.hyperComboAudio && this.hyperComboAudio.readyState >= 2) {
+            console.log('Hyper combo audio is ready, starting playback...');
+            this.hyperComboAudio.play().catch(error => {
+                console.log('Hyper combo audio playback failed:', error);
+            });
+        } else {
+            console.log('Hyper combo audio not ready');
+        }
+    }
+
+    public playBrutalComboAudio() {
+        console.log('Playing brutal combo audio...');
+        if (this.brutalComboAudio && this.brutalComboAudio.readyState >= 2) {
+            console.log('Brutal combo audio is ready, starting playback...');
+            this.brutalComboAudio.play().catch(error => {
+                console.log('Brutal combo audio playback failed:', error);
+            });
+        } else {
+            console.log('Brutal combo audio not ready');
+        }
+    }
+
+    public playMasterComboAudio() {
+        console.log('Playing master combo audio...');
+        if (this.masterComboAudio && this.masterComboAudio.readyState >= 2) {
+            console.log('Master combo audio is ready, starting playback...');
+            this.masterComboAudio.play().catch(error => {
+                console.log('Master combo audio playback failed:', error);
+            });
+        } else {
+            console.log('Master combo audio not ready');
+        }
+    }
+
+    public playAwesomeComboAudio() {
+        console.log('Playing awesome combo audio...');
+        if (this.awesomeComboAudio && this.awesomeComboAudio.readyState >= 2) {
+            console.log('Awesome combo audio is ready, starting playback...');
+            this.awesomeComboAudio.play().catch(error => {
+                console.log('Awesome combo audio playback failed:', error);
+            });
+        } else {
+            console.log('Awesome combo audio not ready');
+        }
+    }
+
+    public playBlasterComboAudio() {
+        console.log('Playing blaster combo audio...');
+        if (this.blasterComboAudio && this.blasterComboAudio.readyState >= 2) {
+            console.log('Blaster combo audio is ready, starting playback...');
+            this.blasterComboAudio.play().catch(error => {
+                console.log('Blaster combo audio playback failed:', error);
+            });
+        } else {
+            console.log('Blaster combo audio not ready');
+        }
+    }
+
+    public playMonsterComboAudio() {
+        console.log('Playing monster combo audio...');
+        if (this.monsterComboAudio && this.monsterComboAudio.readyState >= 2) {
+            console.log('Monster combo audio is ready, starting playback...');
+            this.monsterComboAudio.play().catch(error => {
+                console.log('Monster combo audio playback failed:', error);
+            });
+        } else {
+            console.log('Monster combo audio not ready');
+        }
+    }
+
+    public playKingComboAudio() {
+        console.log('Playing king combo audio...');
+        if (this.kingComboAudio && this.kingComboAudio.readyState >= 2) {
+            console.log('King combo audio is ready, starting playback...');
+            this.kingComboAudio.play().catch(error => {
+                console.log('King combo audio playback failed:', error);
+            });
+        } else {
+            console.log('King combo audio not ready');
+        }
+    }
+
+    public playUltraComboAudio() {
+        console.log('Playing ultra combo audio...');
+        if (this.ultraComboAudio && this.ultraComboAudio.readyState >= 2) {
+            console.log('Ultra combo audio is ready, starting playback...');
+            this.ultraComboAudio.play().catch(error => {
+                console.log('Ultra combo audio playback failed:', error);
+            });
+        } else {
+            console.log('Ultra combo audio not ready');
         }
     }
 
@@ -366,6 +861,42 @@ export class AudioManager {
                     // Use the actual triple-combo audio file
                     this.playTripleComboAudio();
                     return; // Exit early since we're using the audio file
+                case 'super_combo':
+                    // Use the actual super-combo audio file
+                    this.playSuperComboAudio();
+                    return; // Exit early since we're using the audio file
+                case 'hyper_combo':
+                    // Use the actual hyper-combo audio file
+                    this.playHyperComboAudio();
+                    return; // Exit early since we're using the audio file
+                case 'brutal_combo':
+                    // Use the actual brutal-combo audio file
+                    this.playBrutalComboAudio();
+                    return; // Exit early since we're using the audio file
+                case 'master_combo':
+                    // Use the actual master-combo audio file
+                    this.playMasterComboAudio();
+                    return; // Exit early since we're using the audio file
+                case 'awesome_combo':
+                    // Use the actual awesome-combo audio file
+                    this.playAwesomeComboAudio();
+                    return; // Exit early since we're using the audio file
+                case 'blaster_combo':
+                    // Use the actual blaster-combo audio file
+                    this.playBlasterComboAudio();
+                    return; // Exit early since we're using the audio file
+                case 'monster_combo':
+                    // Use the actual monster-combo audio file
+                    this.playMonsterComboAudio();
+                    return; // Exit early since we're using the audio file
+                case 'king_combo':
+                    // Use the actual king-combo audio file
+                    this.playKingComboAudio();
+                    return; // Exit early since we're using the audio file
+                case 'ultra_combo':
+                    // Use the actual ultra-combo audio file
+                    this.playUltraComboAudio();
+                    return; // Exit early since we're using the audio file
                 default:
                     oscillator.type = 'sine';
                     oscillator.frequency.setValueAtTime(440, this.audioContext.currentTime);
@@ -393,6 +924,42 @@ export class AudioManager {
         if (this.tripleComboAudio) {
             this.tripleComboAudio.pause();
             this.tripleComboAudio = null;
+        }
+        if (this.superComboAudio) {
+            this.superComboAudio.pause();
+            this.superComboAudio = null;
+        }
+        if (this.hyperComboAudio) {
+            this.hyperComboAudio.pause();
+            this.hyperComboAudio = null;
+        }
+        if (this.brutalComboAudio) {
+            this.brutalComboAudio.pause();
+            this.brutalComboAudio = null;
+        }
+        if (this.masterComboAudio) {
+            this.masterComboAudio.pause();
+            this.masterComboAudio = null;
+        }
+        if (this.awesomeComboAudio) {
+            this.awesomeComboAudio.pause();
+            this.awesomeComboAudio = null;
+        }
+        if (this.blasterComboAudio) {
+            this.blasterComboAudio.pause();
+            this.blasterComboAudio = null;
+        }
+        if (this.monsterComboAudio) {
+            this.monsterComboAudio.pause();
+            this.monsterComboAudio = null;
+        }
+        if (this.kingComboAudio) {
+            this.kingComboAudio.pause();
+            this.kingComboAudio = null;
+        }
+        if (this.ultraComboAudio) {
+            this.ultraComboAudio.pause();
+            this.ultraComboAudio = null;
         }
         if (this.audioContext) {
             this.audioContext.close();

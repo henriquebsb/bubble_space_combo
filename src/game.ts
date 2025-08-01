@@ -31,7 +31,7 @@ export class Game {
     // Combo system properties
     private comboCount: number = 0;
     private lastCorrectTime: number = 0;
-    private comboTimeWindow: number = 2500; // 2.5 seconds in milliseconds
+    private comboTimeWindow: number = 9000; // 9 seconds in milliseconds
 
     constructor() {
         this.setupCanvas();
@@ -206,15 +206,62 @@ export class Game {
                         this.comboCount++;
                         this.lastCorrectTime = currentTime;
                         
-                        // Check if we achieved a triple combo
+                        // Check if we achieved a combo
                         if (this.comboCount >= 3) {
-                            // Play combo audio and multiply points by 3
-                            if (audioManager) {
-                                audioManager.playSoundEffect('triple_combo');
+                            let comboType = '';
+                            let points = 0;
+                            let audioEffect = '';
+                            
+                            // Determine combo type and rewards
+                            if (this.comboCount >= 12) {
+                                comboType = 'Ultra Combo';
+                                points = 240; // 20 * 12
+                                audioEffect = 'ultra_combo';
+                            } else if (this.comboCount >= 11) {
+                                comboType = 'King Combo';
+                                points = 220; // 20 * 11
+                                audioEffect = 'king_combo';
+                            } else if (this.comboCount >= 10) {
+                                comboType = 'Monster Combo';
+                                points = 200; // 20 * 10
+                                audioEffect = 'monster_combo';
+                            } else if (this.comboCount >= 9) {
+                                comboType = 'Blaster Combo';
+                                points = 180; // 20 * 9
+                                audioEffect = 'blaster_combo';
+                            } else if (this.comboCount >= 8) {
+                                comboType = 'Awesome Combo';
+                                points = 160; // 20 * 8
+                                audioEffect = 'awesome_combo';
+                            } else if (this.comboCount >= 7) {
+                                comboType = 'Master Combo';
+                                points = 140; // 20 * 7
+                                audioEffect = 'master_combo';
+                            } else if (this.comboCount >= 6) {
+                                comboType = 'Brutal Combo';
+                                points = 120; // 20 * 6
+                                audioEffect = 'brutal_combo';
+                            } else if (this.comboCount >= 5) {
+                                comboType = 'Hyper Combo';
+                                points = 100; // 20 * 5
+                                audioEffect = 'hyper_combo';
+                            } else if (this.comboCount >= 4) {
+                                comboType = 'Super Combo';
+                                points = 80; // 20 * 4
+                                audioEffect = 'super_combo';
+                            } else if (this.comboCount >= 3) {
+                                comboType = 'Triple Combo';
+                                points = 60; // 20 * 3
+                                audioEffect = 'triple_combo';
                             }
-                            this.score += 60; // 20 * 3 for the combo
-                            this.comboCount = 0; // Reset combo
-                            console.log('Triple combo achieved! +60 points');
+                            
+                            // Play combo audio and award points
+                            if (audioManager) {
+                                audioManager.playSoundEffect(audioEffect);
+                            }
+                            this.score += points;
+                            // Don't reset combo count - let it continue for higher combos
+                            console.log(`${comboType} achieved! +${points} points`);
                         } else {
                             // Regular correct answer
                             this.score += 20;
