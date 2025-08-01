@@ -1,0 +1,16 @@
+{
+  "name": "falling-bubble-combo",
+  "version": "1.0.0",
+  "description": "A web game where players click falling bubbles before they reach the bottom",
+  "main": "index.html",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vite": "^4.0.0"
+  },
+  "dependencies": {}
+} 
