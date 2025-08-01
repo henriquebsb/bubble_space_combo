@@ -5,6 +5,8 @@ interface PlayerScore {
     level: number;
     score: number;
     date: string;
+    operators: string[];
+    difficulty: string;
 }
 
 export class Game {
@@ -192,7 +194,7 @@ export class Game {
                 } else {
                     // Only remove the clicked bubble for wrong answers
                     this.bubbles.splice(i, 1);
-                    this.score -= 20; // Remove 20 points for wrong answer
+                    this.score -= 40; // Remove 40 points for wrong answer
                     
                     // If score reaches 0 or below, lose a life
                     if (this.score <= 0) {
@@ -333,7 +335,9 @@ export class Game {
             const currentScore: PlayerScore = {
                 level: this.level,
                 score: this.score,
-                date: this.formatDateTime()
+                date: this.formatDateTime(),
+                operators: this.selectedOperators,
+                difficulty: this.getDifficultyName()
             };
             this.saveScore(currentScore);
         }
@@ -342,7 +346,9 @@ export class Game {
         const currentScore: PlayerScore = {
             level: this.level,
             score: this.score,
-            date: this.formatDateTime()
+            date: this.formatDateTime(),
+            operators: this.selectedOperators,
+            difficulty: this.getDifficultyName()
         };
         this.showGameOverScreen(currentScore);
 
@@ -394,6 +400,30 @@ export class Game {
         });
     }
 
+    // Helper method to get difficulty name
+    private getDifficultyName(): string {
+        switch (this.maxDigits) {
+            case 1: return 'Easy';
+            case 2: return 'Medium';
+            case 3: return 'Hard';
+            default: return 'Easy';
+        }
+    }
+
+    // Helper method to format operators for display
+    private formatOperators(operators: string[]): string {
+        if (!operators || operators.length === 0) return 'N/A';
+        return operators.map(op => {
+            switch(op) {
+                case '+': return '+';
+                case '-': return '-';
+                case '*': return '×';
+                case '/': return '÷';
+                default: return op;
+            }
+        }).join(' ');
+    }
+
     private showRankingsModal(): void {
         const rankingsModal = document.getElementById('rankingsModal');
         const modalRankingsContainer = document.getElementById('modalRankingsContainer');
@@ -424,12 +454,16 @@ export class Game {
         scores.forEach((score, index) => {
             const rank = index + 1;
             const medal = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : `${rank}.`;
+            const operatorsText = this.formatOperators(score.operators);
+            const difficultyText = score.difficulty || 'N/A';
             
             rankingsHTML += `
                 <div class="ranking-item">
                     <span class="rank">${medal}</span>
                     <span class="level">Level ${score.level}</span>
                     <span class="score">${score.score} pts</span>
+                    <span class="operators">${operatorsText}</span>
+                    <span class="difficulty">${difficultyText}</span>
                     <span class="date">${score.date}</span>
                 </div>
             `;
@@ -458,12 +492,16 @@ export class Game {
             const rank = index + 1;
             const medal = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : `${rank}.`;
             const isCurrentScore = score.date === this.formatDateTime() && score.level === scores[0].level && score.score === scores[0].score;
+            const operatorsText = this.formatOperators(score.operators);
+            const difficultyText = score.difficulty || 'N/A';
             
             rankingsHTML += `
                 <div class="ranking-item ${isCurrentScore ? 'current-score' : ''}">
                     <span class="rank">${medal}</span>
                     <span class="level">Level ${score.level}</span>
                     <span class="score">${score.score} pts</span>
+                    <span class="operators">${operatorsText}</span>
+                    <span class="difficulty">${difficultyText}</span>
                     <span class="date">${score.date}</span>
                 </div>
             `;
@@ -539,7 +577,9 @@ export class Game {
             const currentScore: PlayerScore = {
                 level: this.level,
                 score: this.score,
-                date: this.formatDateTime()
+                date: this.formatDateTime(),
+                operators: this.selectedOperators,
+                difficulty: this.getDifficultyName()
             };
             this.saveScore(currentScore);
         }
