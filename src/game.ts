@@ -295,15 +295,22 @@ export class Game {
         this.gameRunning = false;
         cancelAnimationFrame(this.animationId);
 
-        // Save the current score before resetting
+        // Save the current score before resetting (only if score > 0 and level > 1)
+        if (this.score > 0 && this.level > 1) {
+            const currentScore: PlayerScore = {
+                level: this.level,
+                score: this.score,
+                date: new Date().toLocaleString()
+            };
+            this.saveScore(currentScore);
+        }
+
+        // Show game over screen with rankings
         const currentScore: PlayerScore = {
             level: this.level,
             score: this.score,
-            date: new Date().toLocaleDateString()
+            date: new Date().toLocaleString()
         };
-        this.saveScore(currentScore);
-
-        // Show game over screen with rankings
         this.showGameOverScreen(currentScore);
 
         // Reset game state completely
@@ -343,21 +350,7 @@ export class Game {
         localStorage.removeItem('mathBubbleScores');
     }
 
-    private showGameOverScreen(finalScore: PlayerScore): void {
-        const gameOver = document.getElementById('gameOver');
-        const finalScoreElement = document.getElementById('finalScore');
-        const finalLevelElement = document.getElementById('finalLevel');
-        
-        if (gameOver && finalScoreElement && finalLevelElement) {
-            finalScoreElement.textContent = finalScore.score.toString();
-            finalLevelElement.textContent = finalScore.level.toString();
-            
-            // Show rankings
-            this.displayRankings();
-            
-            gameOver.style.display = 'block';
-        }
-    }
+
 
     private displayRankings(): void {
         const rankingsContainer = document.getElementById('rankingsContainer');
@@ -375,7 +368,7 @@ export class Game {
         scores.forEach((score, index) => {
             const rank = index + 1;
             const medal = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : `${rank}.`;
-            const isCurrentScore = score.date === new Date().toLocaleDateString() && 
+            const isCurrentScore = score.date === new Date().toLocaleString() && 
                                  score.level === scores[0].level && 
                                  score.score === scores[0].score;
             
@@ -391,6 +384,36 @@ export class Game {
         
         rankingsHTML += '</div>';
         rankingsContainer.innerHTML = rankingsHTML;
+    }
+
+    private showGameOverScreen(finalScore: PlayerScore): void {
+        const gameOver = document.getElementById('gameOver');
+        const finalScoreElement = document.getElementById('finalScore');
+        const finalLevelElement = document.getElementById('finalLevel');
+        
+        if (gameOver && finalScoreElement && finalLevelElement) {
+            finalScoreElement.textContent = finalScore.score.toString();
+            finalLevelElement.textContent = finalScore.level.toString();
+            
+            // Show rankings
+            this.displayRankings();
+            
+            // Add a message if the score doesn't qualify for rankings
+            if (finalScore.score <= 0 || finalScore.level <= 1) {
+                const rankingsContainer = document.getElementById('rankingsContainer');
+                if (rankingsContainer) {
+                    const message = finalScore.score <= 0 && finalScore.level <= 1 
+                        ? '<p style="color: #ff6b6b; margin-top: 10px;">Score too low and level too low to qualify for rankings.<br><small style="color: #ccc;">Minimum: Score > 0 and Level > 1</small></p>'
+                        : finalScore.score <= 0 
+                        ? '<p style="color: #ff6b6b; margin-top: 10px;">Score too low to qualify for rankings.<br><small style="color: #ccc;">Minimum: Score > 0</small></p>'
+                        : '<p style="color: #ff6b6b; margin-top: 10px;">Level too low to qualify for rankings.<br><small style="color: #ccc;">Minimum: Level > 1</small></p>';
+                    
+                    rankingsContainer.innerHTML += message;
+                }
+            }
+            
+            gameOver.style.display = 'block';
+        }
     }
 
     private showOperatorSelection(): void {
@@ -423,6 +446,16 @@ export class Game {
         // Stop the current game
         this.gameRunning = false;
         cancelAnimationFrame(this.animationId);
+
+        // Save the current score before resetting (only if score > 0 and level > 1)
+        if (this.score > 0 && this.level > 1) {
+            const currentScore: PlayerScore = {
+                level: this.level,
+                score: this.score,
+                date: new Date().toLocaleString()
+            };
+            this.saveScore(currentScore);
+        }
 
         // Reset game state completely
         this.bubbles = [];
