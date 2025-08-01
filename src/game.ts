@@ -15,7 +15,7 @@ export class Game {
     private speedMultiplier: number = 0.8;
     private currentMathProblem: MathProblem | null = null;
     private selectedOperators: string[] = ['+', '-', '*', '/'];
-    private maxDigits: number = 2;
+    private maxDigits: number = 1; // Changed from 2 to 1 to match default Easy selection
 
     constructor() {
         this.setupCanvas();
@@ -50,6 +50,14 @@ export class Game {
         this.canvas.addEventListener('click', (e) => {
             this.handleClick(e);
         });
+
+        // Handle end game button
+        const endGameBtn = document.getElementById('endGameBtn');
+        if (endGameBtn) {
+            endGameBtn.addEventListener('click', () => {
+                this.endGame();
+            });
+        }
     }
 
     private setupOperatorSelection(): void {
@@ -87,6 +95,12 @@ export class Game {
             });
         });
 
+        // Initialize maxDigits based on currently selected difficulty
+        const selectedDifficulty = document.querySelector('input[name="difficulty"]:checked') as HTMLInputElement;
+        if (selectedDifficulty) {
+            this.maxDigits = parseInt(selectedDifficulty.value);
+        }
+
         if (startButton) {
             startButton.addEventListener('click', () => {
                 this.hideOperatorSelection();
@@ -99,6 +113,12 @@ export class Game {
         const operatorSelection = document.getElementById('operatorSelection');
         if (operatorSelection) {
             operatorSelection.style.display = 'none';
+        }
+        
+        // Hide end game button
+        const endGameBtn = document.getElementById('endGameBtn');
+        if (endGameBtn) {
+            endGameBtn.style.display = 'none';
         }
     }
 
@@ -124,17 +144,22 @@ export class Game {
                 } else {
                     // Only remove the clicked bubble for wrong answers
                     this.bubbles.splice(i, 1);
-                    this.score += 5;
-                    this.lives--;
-                    if (this.lives <= 0) {
-                        this.gameOver();
-                        return;
+                    this.score -= 20; // Remove 20 points for wrong answer
+                    
+                    // If score reaches 0 or below, lose a life
+                    if (this.score <= 0) {
+                        this.score = 0;
+                        this.lives--;
+                        if (this.lives <= 0) {
+                            this.gameOver();
+                            return;
+                        }
                     }
                 }
                 
                 this.updateUI();
                 
-                if (this.score % 100 === 0) {
+                if (this.score % 100 === 0 && this.score > 0) {
                     this.levelUp();
                 }
                 return;
@@ -284,16 +309,57 @@ export class Game {
             button.classList.remove('selected');
         });
         
+        // Reset difficulty selection to Easy
+        const easyDifficultyRadio = document.querySelector('input[name="difficulty"][value="1"]') as HTMLInputElement;
+        if (easyDifficultyRadio) {
+            easyDifficultyRadio.checked = true;
+            this.maxDigits = parseInt(easyDifficultyRadio.value);
+        }
+        
         const startButton = document.getElementById('startGameBtn') as HTMLButtonElement;
         if (startButton) {
             startButton.disabled = true;
         }
     }
 
+    private endGame(): void {
+        // Stop the current game
+        this.gameRunning = false;
+        cancelAnimationFrame(this.animationId);
+
+        // Reset game state completely
+        this.bubbles = [];
+        this.score = 0;
+        this.lives = 3;
+        this.level = 1;
+        this.speedMultiplier = 0.8;
+        this.bubbleSpawnInterval = 2000;
+        this.currentMathProblem = null;
+
+        // Update UI to reflect reset state
+        this.updateUI();
+
+        // Hide end game button
+        const endGameBtn = document.getElementById('endGameBtn');
+        if (endGameBtn) {
+            endGameBtn.style.display = 'none';
+        }
+
+        // Show operator selection
+        this.showOperatorSelection();
+    }
+
     public start(): void {
         this.gameRunning = true;
         this.lastBubbleTime = performance.now();
         this.currentMathProblem = new MathProblem(this.selectedOperators, this.maxDigits);
+        
+        // Show end game button
+        const endGameBtn = document.getElementById('endGameBtn');
+        if (endGameBtn) {
+            endGameBtn.style.display = 'block';
+        }
+        
         this.gameLoop(performance.now());
     }
 

@@ -26,8 +26,8 @@ export class MathProblem {
                 break;
             case '-':
                 // For subtraction, ensure positive result
-                num1 = Math.floor(Math.random() * maxNumber) + maxNumber;
-                num2 = Math.floor(Math.random() * Math.min(maxNumber, num1 - 1)) + 1;
+                num1 = Math.floor(Math.random() * maxNumber) + 1;
+                num2 = Math.floor(Math.random() * num1) + 1;
                 this.correctAnswer = num1 - num2;
                 break;
             case '*':

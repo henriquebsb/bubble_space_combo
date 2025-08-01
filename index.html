@@ -131,6 +131,22 @@
             margin: 5px 0;
         }
 
+        #endGameBtn {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            font-size: 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin-top: 10px;
+        }
+
+        #endGameBtn:hover {
+            background: #ff5252;
+        }
+
         #gameOver {
             position: absolute;
             top: 50%;
@@ -208,6 +224,7 @@
             <div>Score: <span id="score">0</span></div>
             <div>Lives: <span id="lives">3</span></div>
             <div>Level: <span id="level">1</span></div>
+            <button id="endGameBtn" style="display: none;">End Game</button>
         </div>
 
         <div id="gameOver">
