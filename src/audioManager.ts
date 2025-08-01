@@ -1,5 +1,6 @@
 export class AudioManager {
     private backgroundAudio: HTMLAudioElement | null = null;
+    private lossAudio: HTMLAudioElement | null = null;
     private audioContext: AudioContext | null = null;
     private volume = 0.3;
 
@@ -18,8 +19,16 @@ export class AudioManager {
             this.backgroundAudio.volume = this.volume;
             this.backgroundAudio.preload = 'auto';
             
+            // Initialize loss audio
+            this.lossAudio = new Audio();
+            this.lossAudio.volume = this.volume;
+            this.lossAudio.preload = 'auto';
+            
             // Load background music
             this.loadBackgroundMusic();
+            
+            // Load loss music
+            this.loadLossMusic();
             
             console.log('Audio manager initialized successfully');
             
@@ -58,6 +67,40 @@ export class AudioManager {
 
         this.backgroundAudio.addEventListener('error', () => {
             console.log(`Audio format failed, trying next...`);
+            tryNextFormat();
+        });
+
+        // Start with first format
+        tryNextFormat();
+    }
+
+    private loadLossMusic() {
+        if (!this.lossAudio) return;
+
+        // Try different audio formats for loss music
+        const lossAudioFormats = [
+            '/sounds/loss-music.mp3',
+            '/sounds/loss-music.ogg',
+            '/sounds/loss-music.wav'
+        ];
+
+        let currentFormatIndex = 0;
+
+        const tryNextFormat = () => {
+            if (currentFormatIndex < lossAudioFormats.length) {
+                this.lossAudio!.src = lossAudioFormats[currentFormatIndex];
+                currentFormatIndex++;
+            } else {
+                console.log('All loss music formats failed');
+            }
+        };
+
+        this.lossAudio.addEventListener('canplaythrough', () => {
+            console.log('Loss music loaded successfully');
+        });
+
+        this.lossAudio.addEventListener('error', () => {
+            console.log(`Loss music format failed, trying next...`);
             tryNextFormat();
         });
 
@@ -116,6 +159,33 @@ export class AudioManager {
             // Then fade out for smooth transition
             this.fadeOut(this.backgroundAudio, this.volume, 0, 1000);
         }
+    }
+
+    public playLossMusic() {
+        console.log('Playing loss music...');
+        if (this.lossAudio && this.lossAudio.readyState >= 2) {
+            console.log('Loss music is ready, starting playback...');
+            this.lossAudio.play().catch(error => {
+                console.log('Loss music playback failed:', error);
+            });
+        } else {
+            console.log('Loss music not ready');
+        }
+    }
+
+    public stopBackgroundMusicAndPlayLoss() {
+        console.log('Stopping background music and playing loss music...');
+        if (this.backgroundAudio) {
+            // Immediately pause the background audio
+            this.backgroundAudio.pause();
+            // Then fade out for smooth transition
+            this.fadeOut(this.backgroundAudio, this.volume, 0, 1000);
+        }
+        
+        // Play loss music after a short delay
+        setTimeout(() => {
+            this.playLossMusic();
+        }, 500);
     }
 
     private createFallbackAmbientSound() {
@@ -256,6 +326,10 @@ export class AudioManager {
         if (this.backgroundAudio) {
             this.backgroundAudio.pause();
             this.backgroundAudio = null;
+        }
+        if (this.lossAudio) {
+            this.lossAudio.pause();
+            this.lossAudio = null;
         }
         if (this.audioContext) {
             this.audioContext.close();

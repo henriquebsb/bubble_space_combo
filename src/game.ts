@@ -343,14 +343,14 @@ export class Game {
     }
 
     private gameOver(): void {
-        console.log('Game Over - stopping background music...');
+        console.log('Game Over - stopping background music and playing loss music...');
         this.gameRunning = false;
         cancelAnimationFrame(this.animationId);
 
-        // Stop background music when game ends
+        // Stop background music and play loss music when game ends
         if (audioManager) {
-            console.log('Audio manager found, calling stopBackgroundMusic...');
-            audioManager.stopBackgroundMusic();
+            console.log('Audio manager found, calling stopBackgroundMusicAndPlayLoss...');
+            audioManager.stopBackgroundMusicAndPlayLoss();
         } else {
             console.log('Audio manager not found!');
         }
