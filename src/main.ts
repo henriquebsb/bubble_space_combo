@@ -11,7 +11,7 @@ let game: Game;
 
 function init() {
     game = new Game();
-    game.start();
+    // Don't start the game automatically - let operator selection control it
 }
 
 function restartGame() {
@@ -23,5 +23,5 @@ function restartGame() {
 // Make restartGame available globally
 window.restartGame = restartGame;
 
-// Start the game when the page loads
+// Initialize the game when the page loads
 document.addEventListener('DOMContentLoaded', init); 

@@ -14,10 +14,13 @@ export class Game {
     private bubbleSpawnInterval: number = 2000;
     private speedMultiplier: number = 0.8;
     private currentMathProblem: MathProblem | null = null;
+    private selectedOperators: string[] = ['+', '-', '*', '/'];
 
     constructor() {
         this.setupCanvas();
         this.setupEventListeners();
+        this.setupOperatorSelection();
+        // Don't start the game automatically - wait for operator selection
     }
 
     private setupCanvas(): void {
@@ -48,6 +51,47 @@ export class Game {
         });
     }
 
+    private setupOperatorSelection(): void {
+        const operatorButtons = document.querySelectorAll('.operator-option');
+        const startButton = document.getElementById('startGameBtn') as HTMLButtonElement;
+
+        // Initialize with no operators selected
+        this.selectedOperators = [];
+
+        operatorButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const operator = button.getAttribute('data-operator')!;
+                
+                if (this.selectedOperators.includes(operator)) {
+                    this.selectedOperators = this.selectedOperators.filter(op => op !== operator);
+                    button.classList.remove('selected');
+                } else {
+                    this.selectedOperators.push(operator);
+                    button.classList.add('selected');
+                }
+                
+                // Enable/disable start button based on selection
+                if (startButton) {
+                    startButton.disabled = this.selectedOperators.length === 0;
+                }
+            });
+        });
+
+        if (startButton) {
+            startButton.addEventListener('click', () => {
+                this.hideOperatorSelection();
+                this.start();
+            });
+        }
+    }
+
+    private hideOperatorSelection(): void {
+        const operatorSelection = document.getElementById('operatorSelection');
+        if (operatorSelection) {
+            operatorSelection.style.display = 'none';
+        }
+    }
+
     private handleClick(e: MouseEvent): void {
         if (!this.gameRunning) return;
 
@@ -66,7 +110,7 @@ export class Game {
                     // Remove all bubbles when correct answer is clicked
                     this.bubbles = [];
                     this.score += 20;
-                    this.currentMathProblem = new MathProblem();
+                    this.currentMathProblem = new MathProblem(this.selectedOperators);
                 } else {
                     // Only remove the clicked bubble for wrong answers
                     this.bubbles.splice(i, 1);
@@ -97,7 +141,7 @@ export class Game {
 
     private spawnBubble(): void {
         if (!this.currentMathProblem) {
-            this.currentMathProblem = new MathProblem();
+            this.currentMathProblem = new MathProblem(this.selectedOperators);
         }
         
         const answers = this.currentMathProblem.getAllAnswers();
@@ -135,7 +179,7 @@ export class Game {
                     if (this.lives <= 0) {
                         this.gameOver();
                     } else {
-                        this.currentMathProblem = new MathProblem();
+                        this.currentMathProblem = new MathProblem(this.selectedOperators);
                     }
                 }
             } else if (bubble.isCorrect) {
@@ -144,7 +188,7 @@ export class Game {
         }
         
         if (!correctAnswerBubbleExists && this.currentMathProblem) {
-            this.currentMathProblem = new MathProblem();
+            this.currentMathProblem = new MathProblem(this.selectedOperators);
         }
     }
 
@@ -213,7 +257,7 @@ export class Game {
     public start(): void {
         this.gameRunning = true;
         this.lastBubbleTime = performance.now();
-        this.currentMathProblem = new MathProblem();
+        this.currentMathProblem = new MathProblem(this.selectedOperators);
         this.gameLoop(performance.now());
     }
 

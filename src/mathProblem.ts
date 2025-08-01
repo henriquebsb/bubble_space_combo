@@ -2,14 +2,15 @@ export class MathProblem {
     public question!: string;
     public correctAnswer!: number;
     public wrongAnswers!: number[];
+    private selectedOperators: string[];
 
-    constructor() {
+    constructor(selectedOperators: string[] = ['+', '-', '*', '/']) {
+        this.selectedOperators = selectedOperators;
         this.generateProblem();
     }
 
     private generateProblem(): void {
-        const operations = ['+', '-', '*', '/'];
-        const operation = operations[Math.floor(Math.random() * operations.length)];
+        const operation = this.selectedOperators[Math.floor(Math.random() * this.selectedOperators.length)];
         
         let num1: number, num2: number;
         

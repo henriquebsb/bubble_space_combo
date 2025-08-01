@@ -19,6 +19,71 @@
             height: 100vh;
         }
 
+        #operatorSelection {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            z-index: 40;
+        }
+
+        #operatorSelection h2 {
+            margin: 0 0 30px 0;
+            font-size: 36px;
+            color: #4ecdc4;
+        }
+
+        .operator-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .operator-option {
+            background: #4ecdc4;
+            color: white;
+            border: none;
+            padding: 15px 20px;
+            font-size: 18px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .operator-option:hover {
+            background: #45b7d1;
+        }
+
+        .operator-option.selected {
+            background: #ff6b6b;
+        }
+
+        #startGameBtn {
+            background: #4ecdc4;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 18px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        #startGameBtn:hover {
+            background: #45b7d1;
+        }
+
+        #startGameBtn:disabled {
+            background: #666;
+            cursor: not-allowed;
+        }
+
         #ui {
             position: absolute;
             top: 20px;
@@ -79,6 +144,17 @@
 </head>
 <body>
     <div id="gameContainer">
+        <div id="operatorSelection">
+            <h2>Choose Math Operators</h2>
+            <div class="operator-grid">
+                <button class="operator-option" data-operator="+">Addition (+)</button>
+                <button class="operator-option" data-operator="-">Subtraction (-)</button>
+                <button class="operator-option" data-operator="*">Multiplication (×)</button>
+                <button class="operator-option" data-operator="/">Division (÷)</button>
+            </div>
+            <button id="startGameBtn" disabled>Start Game</button>
+        </div>
+
         <div id="ui">
             <div>Score: <span id="score">0</span></div>
             <div>Lives: <span id="lives">3</span></div>
