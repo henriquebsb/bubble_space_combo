@@ -244,6 +244,52 @@
             background: rgba(78, 205, 196, 0.2);
             border: 2px solid #4ecdc4;
         }
+
+        #rankingsModal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            z-index: 50;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: rgba(0, 0, 0, 0.95);
+            color: white;
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-content h2 {
+            margin: 0 0 30px 0;
+            font-size: 32px;
+            color: #4ecdc4;
+        }
+
+        #closeRankingsBtn {
+            background: #4ecdc4;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin-top: 20px;
+        }
+
+        #closeRankingsBtn:hover {
+            background: #45b7d1;
+        }
     </style>
 </head>
 <body>
@@ -276,7 +322,8 @@
             </div>
             
             <button id="startGameBtn" disabled>Start Game</button>
-            <button id="clearScoresBtn" style="margin-top: 10px; background: #ff6b6b; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer;">Clear Scores</button>
+            <!-- <button id="clearScoresBtn" style="margin-top: 10px; background: #ff6b6b; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer;">Clear Scores</button> -->
+            <button id="showRankingsBtn" style="margin-top: 10px; background: #4ecdc4; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer;">Show Rankings</button>
         </div>
 
         <div id="ui">
@@ -292,6 +339,14 @@
             <p>Final Score: <span id="finalScore">0</span></p>
             <div id="rankingsContainer"></div>
             <button onclick="restartGame()">Play Again</button>
+        </div>
+
+        <div id="rankingsModal">
+            <div class="modal-content">
+                <h2>Top Rankings</h2>
+                <div id="modalRankingsContainer"></div>
+                <button id="closeRankingsBtn">Close</button>
+            </div>
         </div>
     </div>
 

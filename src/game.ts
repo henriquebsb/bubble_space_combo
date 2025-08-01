@@ -65,14 +65,47 @@ export class Game {
             });
         }
 
-        // Handle clear scores button
-        const clearScoresBtn = document.getElementById('clearScoresBtn');
-        if (clearScoresBtn) {
-            clearScoresBtn.addEventListener('click', () => {
-                this.clearScores();
-                alert('All scores cleared!');
+        // Handle show rankings button
+        const showRankingsBtn = document.getElementById('showRankingsBtn');
+        if (showRankingsBtn) {
+            showRankingsBtn.addEventListener('click', () => {
+                this.showRankingsModal();
             });
         }
+
+        // Handle close rankings button
+        const closeRankingsBtn = document.getElementById('closeRankingsBtn');
+        if (closeRankingsBtn) {
+            closeRankingsBtn.addEventListener('click', () => {
+                this.hideRankingsModal();
+            });
+        }
+
+        // Handle click outside modal to close
+        const rankingsModal = document.getElementById('rankingsModal');
+        if (rankingsModal) {
+            rankingsModal.addEventListener('click', (e) => {
+                if (e.target === rankingsModal) {
+                    this.hideRankingsModal();
+                }
+            });
+        }
+
+        // Handle escape key to close modal
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                this.hideRankingsModal();
+            }
+        });
+
+        // Handle clear scores button (commented out)
+        // const clearScoresBtn = document.getElementById('clearScoresBtn');
+        // if (clearScoresBtn) {
+        //     clearScoresBtn.addEventListener('click', () => {
+        //         this.clearScores();
+        //         alert('All scores cleared!');
+        //     });
+        // }
     }
 
     private setupOperatorSelection(): void {
@@ -300,7 +333,7 @@ export class Game {
             const currentScore: PlayerScore = {
                 level: this.level,
                 score: this.score,
-                date: new Date().toLocaleString()
+                date: this.formatDateTime()
             };
             this.saveScore(currentScore);
         }
@@ -309,7 +342,7 @@ export class Game {
         const currentScore: PlayerScore = {
             level: this.level,
             score: this.score,
-            date: new Date().toLocaleString()
+            date: this.formatDateTime()
         };
         this.showGameOverScreen(currentScore);
 
@@ -350,6 +383,62 @@ export class Game {
         localStorage.removeItem('mathBubbleScores');
     }
 
+    // Helper method to format date and time consistently
+    private formatDateTime(): string {
+        return new Date().toLocaleString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+    }
+
+    private showRankingsModal(): void {
+        const rankingsModal = document.getElementById('rankingsModal');
+        const modalRankingsContainer = document.getElementById('modalRankingsContainer');
+        
+        if (rankingsModal && modalRankingsContainer) {
+            this.displayModalRankings(modalRankingsContainer);
+            rankingsModal.style.display = 'flex';
+        }
+    }
+
+    private hideRankingsModal(): void {
+        const rankingsModal = document.getElementById('rankingsModal');
+        if (rankingsModal) {
+            rankingsModal.style.display = 'none';
+        }
+    }
+
+    private displayModalRankings(container: HTMLElement): void {
+        const scores = this.getScores();
+        
+        if (scores.length === 0) {
+            container.innerHTML = '<p>No scores yet. Be the first to set a record!</p>';
+            return;
+        }
+
+        let rankingsHTML = '<div class="rankings-list">';
+        
+        scores.forEach((score, index) => {
+            const rank = index + 1;
+            const medal = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : `${rank}.`;
+            
+            rankingsHTML += `
+                <div class="ranking-item">
+                    <span class="rank">${medal}</span>
+                    <span class="level">Level ${score.level}</span>
+                    <span class="score">${score.score} pts</span>
+                    <span class="date">${score.date}</span>
+                </div>
+            `;
+        });
+        
+        rankingsHTML += '</div>';
+        container.innerHTML = rankingsHTML;
+    }
+
 
 
     private displayRankings(): void {
@@ -368,9 +457,7 @@ export class Game {
         scores.forEach((score, index) => {
             const rank = index + 1;
             const medal = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : `${rank}.`;
-            const isCurrentScore = score.date === new Date().toLocaleString() && 
-                                 score.level === scores[0].level && 
-                                 score.score === scores[0].score;
+            const isCurrentScore = score.date === this.formatDateTime() && score.level === scores[0].level && score.score === scores[0].score;
             
             rankingsHTML += `
                 <div class="ranking-item ${isCurrentScore ? 'current-score' : ''}">
@@ -452,7 +539,7 @@ export class Game {
             const currentScore: PlayerScore = {
                 level: this.level,
                 score: this.score,
-                date: new Date().toLocaleString()
+                date: this.formatDateTime()
             };
             this.saveScore(currentScore);
         }
