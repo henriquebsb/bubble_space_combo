@@ -3,6 +3,7 @@ import { MathProblem } from './mathProblem';
 import { audioManager } from './main';
 
 interface PlayerScore {
+    playerName: string;
     level: number;
     score: number;
     date: string;
@@ -17,6 +18,7 @@ export class Game {
     private score: number = 0;
     private lives: number = 3;
     private level: number = 1;
+    private playerNameDefault: string = 'Unnamed';
     private gameRunning: boolean = false;
     private animationId: number = 0;
     private lastBubbleTime: number = 0;
@@ -358,6 +360,7 @@ export class Game {
         // Save the current score before resetting (only if score > 0 and level > 1)
         if (this.score > 0 && this.level > 1) {
             const currentScore: PlayerScore = {
+                playerName: this.playerNameDefault,
                 level: this.level,
                 score: this.score,
                 date: this.formatDateTime(),
@@ -369,6 +372,7 @@ export class Game {
 
         // Show game over screen with rankings
         const currentScore: PlayerScore = {
+            playerName: this.playerNameDefault,
             level: this.level,
             score: this.score,
             date: this.formatDateTime(),
@@ -485,6 +489,7 @@ export class Game {
             rankingsHTML += `
                 <div class="ranking-item">
                     <span class="rank">${medal}</span>
+                    <span class="playerName">${score.playerName}</span>
                     <span class="level">Level ${score.level}</span>
                     <span class="score">${score.score} pts</span>
                     <span class="operators">${operatorsText}</span>
@@ -523,6 +528,7 @@ export class Game {
             rankingsHTML += `
                 <div class="ranking-item ${isCurrentScore ? 'current-score' : ''}">
                     <span class="rank">${medal}</span>
+                    <span class="playerName">${score.playerName}</span>
                     <span class="level">Level ${score.level}</span>
                     <span class="score">${score.score} pts</span>
                     <span class="operators">${operatorsText}</span>
@@ -609,6 +615,7 @@ export class Game {
         // Save the current score before resetting (only if score > 0 and level > 1)
         if (this.score > 0 && this.level > 1) {
             const currentScore: PlayerScore = {
+                playerName: this.playerNameDefault,
                 level: this.level,
                 score: this.score,
                 date: this.formatDateTime(),
