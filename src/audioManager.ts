@@ -1,6 +1,7 @@
 export class AudioManager {
     private backgroundAudio: HTMLAudioElement | null = null;
     private lossAudio: HTMLAudioElement | null = null;
+    private tripleComboAudio: HTMLAudioElement | null = null;
     private audioContext: AudioContext | null = null;
     private volume = 0.3;
 
@@ -24,11 +25,19 @@ export class AudioManager {
             this.lossAudio.volume = this.volume;
             this.lossAudio.preload = 'auto';
             
+            // Initialize triple combo audio
+            this.tripleComboAudio = new Audio();
+            this.tripleComboAudio.volume = this.volume;
+            this.tripleComboAudio.preload = 'auto';
+            
             // Load background music
             this.loadBackgroundMusic();
             
             // Load loss music
             this.loadLossMusic();
+            
+            // Load triple combo audio
+            this.loadTripleComboAudio();
             
             console.log('Audio manager initialized successfully');
             
@@ -108,6 +117,40 @@ export class AudioManager {
         tryNextFormat();
     }
 
+    private loadTripleComboAudio() {
+        if (!this.tripleComboAudio) return;
+
+        // Try different audio formats for triple combo audio
+        const tripleComboAudioFormats = [
+            '/sounds/triple-combo.mp3',
+            '/sounds/triple-combo.ogg',
+            '/sounds/triple-combo.wav'
+        ];
+
+        let currentFormatIndex = 0;
+
+        const tryNextFormat = () => {
+            if (currentFormatIndex < tripleComboAudioFormats.length) {
+                this.tripleComboAudio!.src = tripleComboAudioFormats[currentFormatIndex];
+                currentFormatIndex++;
+            } else {
+                console.log('All triple combo audio formats failed');
+            }
+        };
+
+        this.tripleComboAudio.addEventListener('canplaythrough', () => {
+            console.log('Triple combo audio loaded successfully');
+        });
+
+        this.tripleComboAudio.addEventListener('error', () => {
+            console.log(`Triple combo audio format failed, trying next...`);
+            tryNextFormat();
+        });
+
+        // Start with first format
+        tryNextFormat();
+    }
+
     private setupBackgroundMusic() {
         if (!this.backgroundAudio) return;
 
@@ -170,6 +213,18 @@ export class AudioManager {
             });
         } else {
             console.log('Loss music not ready');
+        }
+    }
+
+    public playTripleComboAudio() {
+        console.log('Playing triple combo audio...');
+        if (this.tripleComboAudio && this.tripleComboAudio.readyState >= 2) {
+            console.log('Triple combo audio is ready, starting playback...');
+            this.tripleComboAudio.play().catch(error => {
+                console.log('Triple combo audio playback failed:', error);
+            });
+        } else {
+            console.log('Triple combo audio not ready');
         }
     }
 
@@ -307,6 +362,10 @@ export class AudioManager {
                     gainNode.gain.setValueAtTime(0.1, this.audioContext.currentTime);
                     gainNode.gain.exponentialRampToValueAtTime(0.01, this.audioContext.currentTime + 0.2);
                     break;
+                case 'triple_combo':
+                    // Use the actual triple-combo audio file
+                    this.playTripleComboAudio();
+                    return; // Exit early since we're using the audio file
                 default:
                     oscillator.type = 'sine';
                     oscillator.frequency.setValueAtTime(440, this.audioContext.currentTime);
@@ -330,6 +389,10 @@ export class AudioManager {
         if (this.lossAudio) {
             this.lossAudio.pause();
             this.lossAudio = null;
+        }
+        if (this.tripleComboAudio) {
+            this.tripleComboAudio.pause();
+            this.tripleComboAudio = null;
         }
         if (this.audioContext) {
             this.audioContext.close();

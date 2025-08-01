@@ -27,6 +27,11 @@ export class Game {
     private currentMathProblem: MathProblem | null = null;
     private selectedOperators: string[] = ['+', '-', '*', '/'];
     private maxDigits: number = 1; // Changed from 2 to 1 to match default Easy selection
+    
+    // Combo system properties
+    private comboCount: number = 0;
+    private lastCorrectTime: number = 0;
+    private comboTimeWindow: number = 2500; // 2.5 seconds in milliseconds
 
     constructor() {
         this.setupCanvas();
@@ -192,7 +197,37 @@ export class Game {
                 if (bubble.isCorrect) {
                     // Remove all bubbles when correct answer is clicked
                     this.bubbles = [];
-                    this.score += 20;
+                    
+                    const currentTime = performance.now();
+                    const timeSinceLastCorrect = currentTime - this.lastCorrectTime;
+                    
+                    // Check if this is a fast correct answer (within 1 second of last correct)
+                    if (this.lastCorrectTime === 0 || timeSinceLastCorrect <= this.comboTimeWindow) {
+                        this.comboCount++;
+                        this.lastCorrectTime = currentTime;
+                        
+                        // Check if we achieved a triple combo
+                        if (this.comboCount >= 3) {
+                            // Play combo audio and multiply points by 3
+                            if (audioManager) {
+                                audioManager.playSoundEffect('triple_combo');
+                            }
+                            this.score += 60; // 20 * 3 for the combo
+                            this.comboCount = 0; // Reset combo
+                            console.log('Triple combo achieved! +60 points');
+                        } else {
+                            // Regular correct answer
+                            this.score += 20;
+                            console.log(`Combo ${this.comboCount}/3! +20 points`);
+                        }
+                    } else {
+                        // Too much time passed, reset combo
+                        this.comboCount = 1;
+                        this.lastCorrectTime = currentTime;
+                        this.score += 20;
+                        console.log('Combo reset! +20 points');
+                    }
+                    
                     this.currentMathProblem = new MathProblem(this.selectedOperators, this.maxDigits);
                     
                     // Play correct answer sound
@@ -203,6 +238,10 @@ export class Game {
                     // Only remove the clicked bubble for wrong answers
                     this.bubbles.splice(i, 1);
                     this.score -= 40; // Remove 40 points for wrong answer
+                    
+                    // Reset combo on wrong answer
+                    this.comboCount = 0;
+                    this.lastCorrectTime = 0;
                     
                     // Play wrong answer sound
                     if (audioManager) {
@@ -392,6 +431,10 @@ export class Game {
         this.speedMultiplier = 0.8;
         this.bubbleSpawnInterval = 2000;
         this.currentMathProblem = null;
+        
+        // Reset combo system
+        this.comboCount = 0;
+        this.lastCorrectTime = 0;
 
         // Update UI to reflect reset state
         this.updateUI();
@@ -648,6 +691,10 @@ export class Game {
         this.speedMultiplier = 0.8;
         this.bubbleSpawnInterval = 2000;
         this.currentMathProblem = null;
+        
+        // Reset combo system
+        this.comboCount = 0;
+        this.lastCorrectTime = 0;
 
         // Update UI to reflect reset state
         this.updateUI();
@@ -699,6 +746,10 @@ export class Game {
         this.speedMultiplier = 0.8;
         this.bubbleSpawnInterval = 2000;
         this.currentMathProblem = null;
+        
+        // Reset combo system
+        this.comboCount = 0;
+        this.lastCorrectTime = 0;
 
         // Update UI to reflect reset state
         this.updateUI();
