@@ -367,19 +367,22 @@ export class Game {
                 operators: this.selectedOperators,
                 difficulty: this.getDifficultyName()
             };
-            this.saveScore(currentScore);
+            this.saveScoreWithName(currentScore).then(() => {
+                // Show game over screen with rankings after name is entered
+                this.showGameOverScreen(currentScore);
+            });
+        } else {
+            // Show game over screen immediately if score doesn't qualify
+            const currentScore: PlayerScore = {
+                playerName: this.playerNameDefault,
+                level: this.level,
+                score: this.score,
+                date: this.formatDateTime(),
+                operators: this.selectedOperators,
+                difficulty: this.getDifficultyName()
+            };
+            this.showGameOverScreen(currentScore);
         }
-
-        // Show game over screen with rankings
-        const currentScore: PlayerScore = {
-            playerName: this.playerNameDefault,
-            level: this.level,
-            score: this.score,
-            date: this.formatDateTime(),
-            operators: this.selectedOperators,
-            difficulty: this.getDifficultyName()
-        };
-        this.showGameOverScreen(currentScore);
 
         // Reset game state completely
         this.bubbles = [];
@@ -392,6 +395,18 @@ export class Game {
 
         // Update UI to reflect reset state
         this.updateUI();
+    }
+
+    private promptForPlayerName(): Promise<string> {
+        return new Promise((resolve) => {
+            const playerName = prompt('Congratulations! You achieved a high score! Please enter your name:') || 'Unnamed';
+            resolve(playerName);
+        });
+    }
+
+    private async saveScoreWithName(score: PlayerScore): Promise<void> {
+        score.playerName = await this.promptForPlayerName();
+        this.saveScore(score);
     }
 
     private saveScore(score: PlayerScore): void {
@@ -622,7 +637,7 @@ export class Game {
                 operators: this.selectedOperators,
                 difficulty: this.getDifficultyName()
             };
-            this.saveScore(currentScore);
+            this.saveScoreWithName(currentScore);
         }
 
         // Reset game state completely
