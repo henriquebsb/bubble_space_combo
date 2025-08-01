@@ -11,6 +11,7 @@ export class AudioManager {
     private monsterComboAudio: HTMLAudioElement | null = null;
     private kingComboAudio: HTMLAudioElement | null = null;
     private ultraComboAudio: HTMLAudioElement | null = null;
+    private comboBreakerAudio: HTMLAudioElement | null = null;
     private audioContext: AudioContext | null = null;
     private volume = 0.3;
 
@@ -84,6 +85,11 @@ export class AudioManager {
             this.ultraComboAudio.volume = this.volume;
             this.ultraComboAudio.preload = 'auto';
             
+            // Initialize combo breaker audio
+            this.comboBreakerAudio = new Audio();
+            this.comboBreakerAudio.volume = this.volume;
+            this.comboBreakerAudio.preload = 'auto';
+            
             // Load background music
             this.loadBackgroundMusic();
             
@@ -119,6 +125,9 @@ export class AudioManager {
             
             // Load ultra combo audio
             this.loadUltraComboAudio();
+            
+            // Load combo breaker audio
+            this.loadComboBreakerAudio();
             
             console.log('Audio manager initialized successfully');
             
@@ -538,6 +547,40 @@ export class AudioManager {
         tryNextFormat();
     }
 
+    private loadComboBreakerAudio() {
+        if (!this.comboBreakerAudio) return;
+
+        // Try different audio formats for combo breaker audio
+        const comboBreakerAudioFormats = [
+            '/sounds/combo-breaker.mp3',
+            '/sounds/combo-breaker.ogg',
+            '/sounds/combo-breaker.wav'
+        ];
+
+        let currentFormatIndex = 0;
+
+        const tryNextFormat = () => {
+            if (currentFormatIndex < comboBreakerAudioFormats.length) {
+                this.comboBreakerAudio!.src = comboBreakerAudioFormats[currentFormatIndex];
+                currentFormatIndex++;
+            } else {
+                console.log('All combo breaker audio formats failed');
+            }
+        };
+
+        this.comboBreakerAudio.addEventListener('canplaythrough', () => {
+            console.log('Combo breaker audio loaded successfully');
+        });
+
+        this.comboBreakerAudio.addEventListener('error', () => {
+            console.log(`Combo breaker audio format failed, trying next...`);
+            tryNextFormat();
+        });
+
+        // Start with first format
+        tryNextFormat();
+    }
+
     private setupBackgroundMusic() {
         if (!this.backgroundAudio) return;
 
@@ -723,6 +766,18 @@ export class AudioManager {
         }
     }
 
+    public playComboBreakerAudio() {
+        console.log('Playing combo breaker audio...');
+        if (this.comboBreakerAudio && this.comboBreakerAudio.readyState >= 2) {
+            console.log('Combo breaker audio is ready, starting playback...');
+            this.comboBreakerAudio.play().catch(error => {
+                console.log('Combo breaker audio playback failed:', error);
+            });
+        } else {
+            console.log('Combo breaker audio not ready');
+        }
+    }
+
     public stopBackgroundMusicAndPlayLoss() {
         console.log('Stopping background music and playing loss music...');
         if (this.backgroundAudio) {
@@ -897,6 +952,10 @@ export class AudioManager {
                     // Use the actual ultra-combo audio file
                     this.playUltraComboAudio();
                     return; // Exit early since we're using the audio file
+                case 'combo_breaker':
+                    // Use the actual combo-breaker audio file
+                    this.playComboBreakerAudio();
+                    return; // Exit early since we're using the audio file
                 default:
                     oscillator.type = 'sine';
                     oscillator.frequency.setValueAtTime(440, this.audioContext.currentTime);
@@ -960,6 +1019,10 @@ export class AudioManager {
         if (this.ultraComboAudio) {
             this.ultraComboAudio.pause();
             this.ultraComboAudio = null;
+        }
+        if (this.comboBreakerAudio) {
+            this.comboBreakerAudio.pause();
+            this.comboBreakerAudio = null;
         }
         if (this.audioContext) {
             this.audioContext.close();

@@ -32,6 +32,7 @@ export class Game {
     private comboCount: number = 0;
     private lastCorrectTime: number = 0;
     private comboTimeWindow: number = 9000; // 9 seconds in milliseconds
+    private hadCombo: boolean = false; // Track if player had achieved a combo
 
     constructor() {
         this.setupCanvas();
@@ -217,6 +218,8 @@ export class Game {
                                 comboType = 'Ultra Combo';
                                 points = 240; // 20 * 12
                                 audioEffect = 'ultra_combo';
+                                // Reset combo count after achieving the highest combo
+                                this.comboCount = 0;
                             } else if (this.comboCount >= 11) {
                                 comboType = 'King Combo';
                                 points = 220; // 20 * 11
@@ -260,6 +263,7 @@ export class Game {
                                 audioManager.playSoundEffect(audioEffect);
                             }
                             this.score += points;
+                            this.hadCombo = true; // Mark that player had a combo
                             // Don't reset combo count - let it continue for higher combos
                             console.log(`${comboType} achieved! +${points} points`);
                         } else {
@@ -268,6 +272,15 @@ export class Game {
                             console.log(`Combo ${this.comboCount}/3! +20 points`);
                         }
                     } else {
+                        // Too much time passed, check if player had a combo and broke it
+                        if (this.hadCombo) {
+                            if (audioManager) {
+                                audioManager.playSoundEffect('combo_breaker');
+                            }
+                            console.log('Combo broken due to time!');
+                            this.hadCombo = false; // Reset the combo flag
+                        }
+                        
                         // Too much time passed, reset combo
                         this.comboCount = 1;
                         this.lastCorrectTime = currentTime;
@@ -285,6 +298,15 @@ export class Game {
                     // Only remove the clicked bubble for wrong answers
                     this.bubbles.splice(i, 1);
                     this.score -= 40; // Remove 40 points for wrong answer
+                    
+                    // Check if player had a combo and broke it
+                    if (this.hadCombo) {
+                        if (audioManager) {
+                            audioManager.playSoundEffect('combo_breaker');
+                        }
+                        console.log('Combo broken!');
+                        this.hadCombo = false; // Reset the combo flag
+                    }
                     
                     // Reset combo on wrong answer
                     this.comboCount = 0;
@@ -482,6 +504,7 @@ export class Game {
         // Reset combo system
         this.comboCount = 0;
         this.lastCorrectTime = 0;
+        this.hadCombo = false;
 
         // Update UI to reflect reset state
         this.updateUI();
@@ -742,6 +765,7 @@ export class Game {
         // Reset combo system
         this.comboCount = 0;
         this.lastCorrectTime = 0;
+        this.hadCombo = false;
 
         // Update UI to reflect reset state
         this.updateUI();
@@ -797,6 +821,7 @@ export class Game {
         // Reset combo system
         this.comboCount = 0;
         this.lastCorrectTime = 0;
+        this.hadCombo = false;
 
         // Update UI to reflect reset state
         this.updateUI();
