@@ -37,9 +37,14 @@ export class MathProblem {
                 this.correctAnswer = num1 * num2;
                 break;
             case '/':
-                // For division, ensure whole number result
+                // For division, ensure whole number result and both numbers within range
+                num1 = Math.floor(Math.random() * maxNumber) + 1;
                 num2 = Math.floor(Math.random() * maxNumber) + 1;
-                this.correctAnswer = Math.floor(Math.random() * maxNumber) + 1;
+                this.correctAnswer = Math.floor(num1 / num2);
+                // Ensure we have a whole number result
+                if (this.correctAnswer === 0) {
+                    this.correctAnswer = 1;
+                }
                 num1 = this.correctAnswer * num2;
                 break;
             default:
