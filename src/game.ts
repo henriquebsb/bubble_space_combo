@@ -1,4 +1,5 @@
 import { Bubble } from './bubble';
+import { MathProblem } from './mathProblem';
 
 export class Game {
     private canvas!: HTMLCanvasElement;
@@ -10,8 +11,9 @@ export class Game {
     private gameRunning: boolean = false;
     private animationId: number = 0;
     private lastBubbleTime: number = 0;
-    private bubbleSpawnInterval: number = 2000; // milliseconds
-    private speedMultiplier: number = 1;
+    private bubbleSpawnInterval: number = 2000;
+    private speedMultiplier: number = 0.8;
+    private currentMathProblem: MathProblem | null = null;
 
     constructor() {
         this.setupCanvas();
@@ -36,13 +38,11 @@ export class Game {
     }
 
     private setupEventListeners(): void {
-        // Handle window resize
         window.addEventListener('resize', () => {
             this.canvas.width = window.innerWidth;
             this.canvas.height = window.innerHeight;
         });
 
-        // Handle clicks
         this.canvas.addEventListener('click', (e) => {
             this.handleClick(e);
         });
@@ -55,7 +55,6 @@ export class Game {
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;
 
-        // Check if any bubble was clicked
         for (let i = this.bubbles.length - 1; i >= 0; i--) {
             const bubble = this.bubbles[i];
             const distance = Math.sqrt(
@@ -63,15 +62,24 @@ export class Game {
             );
 
             if (distance <= bubble.radius) {
-                // Bubble clicked!
-                this.bubbles.splice(i, 1);
-                this.score += 10;
+                if (bubble.isCorrect) {
+                    // Remove all bubbles when correct answer is clicked
+                    this.bubbles = [];
+                    this.score += 20;
+                    this.currentMathProblem = new MathProblem();
+                } else {
+                    // Only remove the clicked bubble for wrong answers
+                    this.bubbles.splice(i, 1);
+                    this.score += 5;
+                    this.lives--;
+                    if (this.lives <= 0) {
+                        this.gameOver();
+                        return;
+                    }
+                }
+                
                 this.updateUI();
                 
-                // Create explosion effect
-                this.createExplosion(bubble.x, bubble.y);
-                
-                // Check for level up
                 if (this.score % 100 === 0) {
                     this.levelUp();
                 }
@@ -80,88 +88,102 @@ export class Game {
         }
     }
 
-    private createExplosion(x: number, y: number): void {
-        // Create particle explosion effect
-        for (let i = 0; i < 8; i++) {
-            const angle = (i / 8) * Math.PI * 2;
-            const velocity = 3;
-            const particle = {
-                x: x,
-                y: y,
-                vx: Math.cos(angle) * velocity,
-                vy: Math.sin(angle) * velocity,
-                life: 30,
-                maxLife: 30
-            };
-
-            // Store particles for rendering (simplified for now)
-            setTimeout(() => {
-                // Particle effect would be rendered here
-            }, i * 50);
-        }
-    }
-
     private levelUp(): void {
         this.level++;
-        this.speedMultiplier += 0.2;
-        this.bubbleSpawnInterval = Math.max(500, this.bubbleSpawnInterval - 100);
+        this.speedMultiplier += 0.1;
+        this.bubbleSpawnInterval = Math.max(1000, this.bubbleSpawnInterval - 100);
         this.updateUI();
     }
 
     private spawnBubble(): void {
-        const x = Math.random() * (this.canvas.width - 100) + 50;
-        const y = -50; // Start above the screen
-        const radius = Math.random() * 20 + 15; // Random size between 15-35
-        const speed = (Math.random() * 2 + 1) * this.speedMultiplier;
+        if (!this.currentMathProblem) {
+            this.currentMathProblem = new MathProblem();
+        }
         
-        const bubble = new Bubble(x, y, radius, speed);
-        this.bubbles.push(bubble);
+        const answers = this.currentMathProblem.getAllAnswers();
+        const numBubbles = 4;
+        
+        for (let i = 0; i < numBubbles; i++) {
+            const x = Math.random() * (this.canvas.width - 100) + 50;
+            const y = -50 - (i * 40);
+            const radius = 30;
+            const speed = (Math.random() * 0.5 + 0.5) * this.speedMultiplier;
+            
+            const answerIndex = i % answers.length;
+            const answer = answers[answerIndex];
+            const isCorrect = this.currentMathProblem.isCorrectAnswer(answer);
+            
+            const bubble = new Bubble(x, y, radius, speed, answer, isCorrect);
+            this.bubbles.push(bubble);
+        }
     }
 
-    private updateBubbles(deltaTime: number): void {
+    private updateBubbles(): void {
+        let correctAnswerBubbleExists = false;
+        
         for (let i = this.bubbles.length - 1; i >= 0; i--) {
             const bubble = this.bubbles[i];
-            bubble.update(deltaTime);
+            bubble.update(16);
 
-            // Remove bubbles that have fallen off screen
             if (bubble.y > this.canvas.height + bubble.radius) {
                 this.bubbles.splice(i, 1);
-                this.lives--;
-                this.updateUI();
-
-                if (this.lives <= 0) {
-                    this.gameOver();
+                
+                if (bubble.isCorrect) {
+                    this.lives--;
+                    this.updateUI();
+                    
+                    if (this.lives <= 0) {
+                        this.gameOver();
+                    } else {
+                        this.currentMathProblem = new MathProblem();
+                    }
                 }
+            } else if (bubble.isCorrect) {
+                correctAnswerBubbleExists = true;
             }
+        }
+        
+        if (!correctAnswerBubbleExists && this.currentMathProblem) {
+            this.currentMathProblem = new MathProblem();
         }
     }
 
     private render(): void {
-        // Clear canvas
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
-        // Render bubbles
         this.bubbles.forEach(bubble => bubble.render(this.ctx));
+
+        if (this.currentMathProblem) {
+            this.renderMathProblem();
+        }
+    }
+
+    private renderMathProblem(): void {
+        const question = this.currentMathProblem!.getQuestion();
+        
+        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+        this.ctx.fillRect(0, this.canvas.height - 80, this.canvas.width, 80);
+        
+        this.ctx.fillStyle = '#FFFFFF';
+        this.ctx.font = 'bold 32px Arial';
+        this.ctx.textAlign = 'center';
+        this.ctx.textBaseline = 'middle';
+        this.ctx.fillText(`Solve: ${question} = ?`, this.canvas.width / 2, this.canvas.height - 40);
+        
+        this.ctx.font = '16px Arial';
+        this.ctx.fillText('Click the bubble with the correct answer!', this.canvas.width / 2, this.canvas.height - 15);
     }
 
     private gameLoop(currentTime: number): void {
         if (!this.gameRunning) return;
 
-        const deltaTime = currentTime - this.lastBubbleTime;
-
-        // Spawn new bubbles
-        if (deltaTime > this.bubbleSpawnInterval) {
+        if (currentTime - this.lastBubbleTime > this.bubbleSpawnInterval) {
             this.spawnBubble();
             this.lastBubbleTime = currentTime;
         }
 
-        // Update game state
-        this.updateBubbles(16); // Assume 60fps
-
-        // Render
+        this.updateBubbles();
         this.render();
 
-        // Continue loop
         this.animationId = requestAnimationFrame((time) => this.gameLoop(time));
     }
 
@@ -191,28 +213,25 @@ export class Game {
     public start(): void {
         this.gameRunning = true;
         this.lastBubbleTime = performance.now();
+        this.currentMathProblem = new MathProblem();
         this.gameLoop(performance.now());
     }
 
     public restart(): void {
-        // Reset game state
         this.bubbles = [];
         this.score = 0;
         this.lives = 3;
         this.level = 1;
-        this.speedMultiplier = 1;
+        this.speedMultiplier = 0.8;
         this.bubbleSpawnInterval = 2000;
+        this.currentMathProblem = null;
 
-        // Hide game over screen
         const gameOverElement = document.getElementById('gameOver');
         if (gameOverElement) {
             gameOverElement.style.display = 'none';
         }
 
-        // Update UI
         this.updateUI();
-
-        // Start game
         this.start();
     }
 } 
