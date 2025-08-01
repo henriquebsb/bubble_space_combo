@@ -15,6 +15,7 @@ export class Game {
     private speedMultiplier: number = 0.8;
     private currentMathProblem: MathProblem | null = null;
     private selectedOperators: string[] = ['+', '-', '*', '/'];
+    private maxDigits: number = 2;
 
     constructor() {
         this.setupCanvas();
@@ -54,6 +55,7 @@ export class Game {
     private setupOperatorSelection(): void {
         const operatorButtons = document.querySelectorAll('.operator-option');
         const startButton = document.getElementById('startGameBtn') as HTMLButtonElement;
+        const difficultyInputs = document.querySelectorAll('input[name="difficulty"]');
 
         // Initialize with no operators selected
         this.selectedOperators = [];
@@ -74,6 +76,14 @@ export class Game {
                 if (startButton) {
                     startButton.disabled = this.selectedOperators.length === 0;
                 }
+            });
+        });
+
+        // Handle difficulty selection
+        difficultyInputs.forEach(input => {
+            input.addEventListener('change', (e) => {
+                const target = e.target as HTMLInputElement;
+                this.maxDigits = parseInt(target.value);
             });
         });
 
@@ -110,7 +120,7 @@ export class Game {
                     // Remove all bubbles when correct answer is clicked
                     this.bubbles = [];
                     this.score += 20;
-                    this.currentMathProblem = new MathProblem(this.selectedOperators);
+                    this.currentMathProblem = new MathProblem(this.selectedOperators, this.maxDigits);
                 } else {
                     // Only remove the clicked bubble for wrong answers
                     this.bubbles.splice(i, 1);
@@ -141,7 +151,7 @@ export class Game {
 
     private spawnBubble(): void {
         if (!this.currentMathProblem) {
-            this.currentMathProblem = new MathProblem(this.selectedOperators);
+            this.currentMathProblem = new MathProblem(this.selectedOperators, this.maxDigits);
         }
         
         const answers = this.currentMathProblem.getAllAnswers();
@@ -179,7 +189,7 @@ export class Game {
                     if (this.lives <= 0) {
                         this.gameOver();
                     } else {
-                        this.currentMathProblem = new MathProblem(this.selectedOperators);
+                        this.currentMathProblem = new MathProblem(this.selectedOperators, this.maxDigits);
                     }
                 }
             } else if (bubble.isCorrect) {
@@ -188,7 +198,7 @@ export class Game {
         }
         
         if (!correctAnswerBubbleExists && this.currentMathProblem) {
-            this.currentMathProblem = new MathProblem(this.selectedOperators);
+            this.currentMathProblem = new MathProblem(this.selectedOperators, this.maxDigits);
         }
     }
 
@@ -245,23 +255,7 @@ export class Game {
         this.gameRunning = false;
         cancelAnimationFrame(this.animationId);
 
-        const gameOverElement = document.getElementById('gameOver');
-        const finalScoreElement = document.getElementById('finalScore');
-
-        if (gameOverElement && finalScoreElement) {
-            finalScoreElement.textContent = this.score.toString();
-            gameOverElement.style.display = 'block';
-        }
-    }
-
-    public start(): void {
-        this.gameRunning = true;
-        this.lastBubbleTime = performance.now();
-        this.currentMathProblem = new MathProblem(this.selectedOperators);
-        this.gameLoop(performance.now());
-    }
-
-    public restart(): void {
+        // Reset game state completely
         this.bubbles = [];
         this.score = 0;
         this.lives = 3;
@@ -270,12 +264,57 @@ export class Game {
         this.bubbleSpawnInterval = 2000;
         this.currentMathProblem = null;
 
-        const gameOverElement = document.getElementById('gameOver');
-        if (gameOverElement) {
-            gameOverElement.style.display = 'none';
-        }
-
+        // Update UI to reflect reset state
         this.updateUI();
-        this.start();
+
+        // Show operator selection instead of game over screen
+        this.showOperatorSelection();
+    }
+
+    private showOperatorSelection(): void {
+        const operatorSelection = document.getElementById('operatorSelection');
+        if (operatorSelection) {
+            operatorSelection.style.display = 'block';
+        }
+        
+        // Reset operator selection
+        this.selectedOperators = [];
+        const operatorButtons = document.querySelectorAll('.operator-option');
+        operatorButtons.forEach(button => {
+            button.classList.remove('selected');
+        });
+        
+        const startButton = document.getElementById('startGameBtn') as HTMLButtonElement;
+        if (startButton) {
+            startButton.disabled = true;
+        }
+    }
+
+    public start(): void {
+        this.gameRunning = true;
+        this.lastBubbleTime = performance.now();
+        this.currentMathProblem = new MathProblem(this.selectedOperators, this.maxDigits);
+        this.gameLoop(performance.now());
+    }
+
+    public restart(): void {
+        // Stop the current game if it's running
+        this.gameRunning = false;
+        cancelAnimationFrame(this.animationId);
+
+        // Reset game state completely
+        this.bubbles = [];
+        this.score = 0;
+        this.lives = 3;
+        this.level = 1;
+        this.speedMultiplier = 0.8;
+        this.bubbleSpawnInterval = 2000;
+        this.currentMathProblem = null;
+
+        // Update UI to reflect reset state
+        this.updateUI();
+
+        // Show operator selection instead of starting game
+        this.showOperatorSelection();
     }
 } 

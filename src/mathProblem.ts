@@ -3,9 +3,11 @@ export class MathProblem {
     public correctAnswer!: number;
     public wrongAnswers!: number[];
     private selectedOperators: string[];
+    private maxDigits: number;
 
-    constructor(selectedOperators: string[] = ['+', '-', '*', '/']) {
+    constructor(selectedOperators: string[] = ['+', '-', '*', '/'], maxDigits: number = 2) {
         this.selectedOperators = selectedOperators;
+        this.maxDigits = maxDigits;
         this.generateProblem();
     }
 
@@ -13,31 +15,37 @@ export class MathProblem {
         const operation = this.selectedOperators[Math.floor(Math.random() * this.selectedOperators.length)];
         
         let num1: number, num2: number;
+        const maxNumber = Math.pow(10, this.maxDigits) - 1;
         
         switch (operation) {
             case '+':
-                num1 = Math.floor(Math.random() * 20) + 1;
-                num2 = Math.floor(Math.random() * 20) + 1;
+                // For addition, use numbers up to maxDigits
+                num1 = Math.floor(Math.random() * maxNumber) + 1;
+                num2 = Math.floor(Math.random() * maxNumber) + 1;
                 this.correctAnswer = num1 + num2;
                 break;
             case '-':
-                num1 = Math.floor(Math.random() * 20) + 10;
-                num2 = Math.floor(Math.random() * 10) + 1;
+                // For subtraction, ensure positive result
+                num1 = Math.floor(Math.random() * maxNumber) + maxNumber;
+                num2 = Math.floor(Math.random() * Math.min(maxNumber, num1 - 1)) + 1;
                 this.correctAnswer = num1 - num2;
                 break;
             case '*':
-                num1 = Math.floor(Math.random() * 10) + 1;
-                num2 = Math.floor(Math.random() * 10) + 1;
+                // For multiplication, use numbers up to maxDigits
+                num1 = Math.floor(Math.random() * maxNumber) + 1;
+                num2 = Math.floor(Math.random() * maxNumber) + 1;
                 this.correctAnswer = num1 * num2;
                 break;
             case '/':
-                num2 = Math.floor(Math.random() * 10) + 1;
-                this.correctAnswer = Math.floor(Math.random() * 10) + 1;
+                // For division, ensure whole number result
+                num2 = Math.floor(Math.random() * maxNumber) + 1;
+                this.correctAnswer = Math.floor(Math.random() * maxNumber) + 1;
                 num1 = this.correctAnswer * num2;
                 break;
             default:
-                num1 = Math.floor(Math.random() * 20) + 1;
-                num2 = Math.floor(Math.random() * 20) + 1;
+                // Fallback to addition
+                num1 = Math.floor(Math.random() * maxNumber) + 1;
+                num2 = Math.floor(Math.random() * maxNumber) + 1;
                 this.correctAnswer = num1 + num2;
         }
         

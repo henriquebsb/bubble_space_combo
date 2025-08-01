@@ -64,6 +64,36 @@
             background: #ff6b6b;
         }
 
+        .difficulty-section {
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        .difficulty-section h3 {
+            margin: 0 0 15px 0;
+            font-size: 20px;
+            color: #4ecdc4;
+        }
+
+        .difficulty-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .difficulty-options label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .difficulty-options input[type="radio"] {
+            margin: 0;
+            cursor: pointer;
+        }
+
         #startGameBtn {
             background: #4ecdc4;
             color: white;
@@ -152,6 +182,25 @@
                 <button class="operator-option" data-operator="*">Multiplication (×)</button>
                 <button class="operator-option" data-operator="/">Division (÷)</button>
             </div>
+            
+            <div class="difficulty-section">
+                <h3>Difficulty Level</h3>
+                <div class="difficulty-options">
+                    <label>
+                        <input type="radio" name="difficulty" value="1" checked>
+                        Easy (1-9)
+                    </label>
+                    <label>
+                        <input type="radio" name="difficulty" value="2">
+                        Medium (1-99)
+                    </label>
+                    <label>
+                        <input type="radio" name="difficulty" value="3">
+                        Hard (1-999)
+                    </label>
+                </div>
+            </div>
+            
             <button id="startGameBtn" disabled>Start Game</button>
         </div>
 
