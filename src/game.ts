@@ -528,9 +528,223 @@ export class Game {
 
     private promptForPlayerName(): Promise<string> {
         return new Promise((resolve) => {
-            const playerName = prompt('Congratulations! You achieved a high score! Please enter your name:') || 'Unnamed';
-            resolve(playerName);
+            this.showNameInputModal(resolve);
         });
+    }
+
+    private showNameInputModal(resolve: (name: string) => void): void {
+        // Create modal overlay
+        const modalOverlay = document.createElement('div');
+        modalOverlay.id = 'nameInputModal';
+        modalOverlay.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            backdrop-filter: blur(5px);
+        `;
+
+        // Create modal content
+        const modalContent = document.createElement('div');
+        modalContent.style.cssText = `
+            background: rgba(0, 0, 0, 0.95);
+            color: white;
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            border: 2px solid rgba(78, 205, 196, 0.3);
+            box-shadow: 0 0 30px rgba(78, 205, 196, 0.2);
+            backdrop-filter: blur(10px);
+        `;
+
+        // Create title
+        const title = document.createElement('h2');
+        title.textContent = '🏆 High Score Achievement!';
+        title.style.cssText = `
+            margin: 0 0 20px 0;
+            font-size: 28px;
+            color: #4ecdc4;
+            text-shadow: 0 0 10px rgba(78, 205, 196, 0.5);
+        `;
+
+        // Create subtitle
+        const subtitle = document.createElement('p');
+        subtitle.textContent = 'Congratulations! You achieved a high score!';
+        subtitle.style.cssText = `
+            margin: 0 0 30px 0;
+            font-size: 16px;
+            color: #e9e9e9;
+            line-height: 1.4;
+        `;
+
+        // Create input container
+        const inputContainer = document.createElement('div');
+        inputContainer.style.cssText = `
+            margin-bottom: 30px;
+        `;
+
+        // Create label
+        const label = document.createElement('label');
+        label.textContent = 'Enter your name:';
+        label.style.cssText = `
+            display: block;
+            margin-bottom: 10px;
+            font-size: 16px;
+            color: #4ecdc4;
+            font-weight: bold;
+        `;
+
+        // Create input field
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.placeholder = 'Your name';
+        input.maxLength = 12;
+        input.style.cssText = `
+            width: 100%;
+            padding: 15px;
+            font-size: 18px;
+            border: 2px solid rgba(78, 205, 196, 0.3);
+            border-radius: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            text-align: center;
+            outline: none;
+            transition: all 0.3s;
+            box-sizing: border-box;
+        `;
+
+        // Add focus styles
+        input.addEventListener('focus', () => {
+            input.style.borderColor = '#4ecdc4';
+            input.style.boxShadow = '0 0 15px rgba(78, 205, 196, 0.3)';
+        });
+
+        input.addEventListener('blur', () => {
+            input.style.borderColor = 'rgba(78, 205, 196, 0.3)';
+            input.style.boxShadow = 'none';
+        });
+
+        // Create button container
+        const buttonContainer = document.createElement('div');
+        buttonContainer.style.cssText = `
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        `;
+
+        // Create submit button
+        const submitBtn = document.createElement('button');
+        submitBtn.textContent = 'Save Score';
+        submitBtn.style.cssText = `
+            background: #4ecdc4;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background 0.3s;
+            font-weight: bold;
+        `;
+
+        submitBtn.addEventListener('mouseenter', () => {
+            submitBtn.style.background = '#45b7d1';
+        });
+
+        submitBtn.addEventListener('mouseleave', () => {
+            submitBtn.style.background = '#4ecdc4';
+        });
+
+        // Create cancel button
+        const cancelBtn = document.createElement('button');
+        cancelBtn.textContent = 'Skip';
+        cancelBtn.style.cssText = `
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 12px 25px;
+            font-size: 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        `;
+
+        cancelBtn.addEventListener('mouseenter', () => {
+            cancelBtn.style.background = 'rgba(255, 255, 255, 0.2)';
+        });
+
+        cancelBtn.addEventListener('mouseleave', () => {
+            cancelBtn.style.background = 'rgba(255, 255, 255, 0.1)';
+        });
+
+        // Handle submit
+        const handleSubmit = () => {
+            const name = input.value.trim() || 'Unnamed';
+            document.body.removeChild(modalOverlay);
+            resolve(name);
+        };
+
+        // Handle cancel
+        const handleCancel = () => {
+            document.body.removeChild(modalOverlay);
+            resolve('Unnamed');
+        };
+
+        // Add event listeners
+        submitBtn.addEventListener('click', handleSubmit);
+        cancelBtn.addEventListener('click', handleCancel);
+        input.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                handleSubmit();
+            }
+        });
+
+        // Escape key to cancel
+        const handleEscape = (e: KeyboardEvent) => {
+            if (e.key === 'Escape') {
+                handleCancel();
+            }
+        };
+        document.addEventListener('keydown', handleEscape);
+
+        // Assemble modal
+        inputContainer.appendChild(label);
+        inputContainer.appendChild(input);
+        buttonContainer.appendChild(submitBtn);
+        buttonContainer.appendChild(cancelBtn);
+
+        modalContent.appendChild(title);
+        modalContent.appendChild(subtitle);
+        modalContent.appendChild(inputContainer);
+        modalContent.appendChild(buttonContainer);
+
+        modalOverlay.appendChild(modalContent);
+        document.body.appendChild(modalOverlay);
+
+        // Focus input
+        setTimeout(() => {
+            input.focus();
+        }, 100);
+
+        // Clean up escape listener when modal is closed
+        const cleanup = () => {
+            document.removeEventListener('keydown', handleEscape);
+        };
+        modalOverlay.addEventListener('click', (e) => {
+            if (e.target === modalOverlay) {
+                handleCancel();
+            }
+        });
+        submitBtn.addEventListener('click', cleanup);
+        cancelBtn.addEventListener('click', cleanup);
     }
 
     private async saveScoreWithName(score: PlayerScore): Promise<void> {
