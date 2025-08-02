@@ -73,8 +73,8 @@ export class Game {
         // Handle end game button
         const endGameBtn = document.getElementById('endGameBtn');
         if (endGameBtn) {
-            endGameBtn.addEventListener('click', () => {
-                this.endGame();
+            endGameBtn.addEventListener('click', async () => {
+                await this.endGame();
             });
         }
 
@@ -589,6 +589,18 @@ export class Game {
 
         // Update UI to reflect reset state
         this.updateUI();
+
+        // Hide end game button
+        const endGameBtn = document.getElementById('endGameBtn');
+        if (endGameBtn) {
+            endGameBtn.style.display = 'none';
+        }
+        
+        // Hide pause button
+        const pauseBtn = document.getElementById('pauseBtn');
+        if (pauseBtn) {
+            pauseBtn.style.display = 'none';
+        }
     }
 
     private promptForPlayerName(): Promise<string> {
@@ -1032,7 +1044,7 @@ export class Game {
         }
     }
 
-    private endGame(): void {
+    private async endGame(): Promise<void> {
         console.log('End Game - stopping background music...');
         // Stop the current game
         this.gameRunning = false;
@@ -1056,7 +1068,7 @@ export class Game {
                 operators: this.selectedOperators,
                 difficulty: this.getDifficultyName()
             };
-            this.saveScoreWithName(currentScore);
+            await this.saveScoreWithName(currentScore);
         }
 
         // Reset game state completely
