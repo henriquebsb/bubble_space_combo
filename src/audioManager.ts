@@ -1,5 +1,8 @@
 export class AudioManager {
     private backgroundAudio: HTMLAudioElement | null = null;
+    private backgroundAudio2: HTMLAudioElement | null = null;
+    private backgroundAudio3: HTMLAudioElement | null = null;
+    private backgroundAudio4: HTMLAudioElement | null = null;
     private lossAudio: HTMLAudioElement | null = null;
     private tripleComboAudio: HTMLAudioElement | null = null;
     private superComboAudio: HTMLAudioElement | null = null;
@@ -14,6 +17,7 @@ export class AudioManager {
     private comboBreakerAudio: HTMLAudioElement | null = null;
     private audioContext: AudioContext | null = null;
     private volume = 0.3;
+    private currentBackgroundTrack: number = 1; // Track which background music is currently playing
 
     constructor() {
         this.initializeAudio();
@@ -29,6 +33,24 @@ export class AudioManager {
             this.backgroundAudio.loop = true;
             this.backgroundAudio.volume = this.volume;
             this.backgroundAudio.preload = 'auto';
+            
+            // Initialize background audio 2
+            this.backgroundAudio2 = new Audio();
+            this.backgroundAudio2.loop = true;
+            this.backgroundAudio2.volume = this.volume;
+            this.backgroundAudio2.preload = 'auto';
+            
+            // Initialize background audio 3
+            this.backgroundAudio3 = new Audio();
+            this.backgroundAudio3.loop = true;
+            this.backgroundAudio3.volume = this.volume;
+            this.backgroundAudio3.preload = 'auto';
+            
+            // Initialize background audio 4
+            this.backgroundAudio4 = new Audio();
+            this.backgroundAudio4.loop = true;
+            this.backgroundAudio4.volume = this.volume;
+            this.backgroundAudio4.preload = 'auto';
             
             // Initialize loss audio
             this.lossAudio = new Audio();
@@ -92,6 +114,9 @@ export class AudioManager {
             
             // Load background music
             this.loadBackgroundMusic();
+            this.loadBackgroundMusic2();
+            this.loadBackgroundMusic3();
+            this.loadBackgroundMusic4();
             
             // Load loss music
             this.loadLossMusic();
@@ -166,6 +191,108 @@ export class AudioManager {
 
         this.backgroundAudio.addEventListener('error', () => {
             console.log(`Audio format failed, trying next...`);
+            tryNextFormat();
+        });
+
+        // Start with first format
+        tryNextFormat();
+    }
+
+    private loadBackgroundMusic2() {
+        if (!this.backgroundAudio2) return;
+
+        // Try different audio formats
+        const audioFormats = [
+            '/sounds/background-music2.mp3',
+            '/sounds/background-music2.ogg',
+            '/sounds/background-music2.wav'
+        ];
+
+        let currentFormatIndex = 0;
+
+        const tryNextFormat = () => {
+            if (currentFormatIndex < audioFormats.length) {
+                this.backgroundAudio2!.src = audioFormats[currentFormatIndex];
+                currentFormatIndex++;
+            } else {
+                console.log('All background music 2 formats failed');
+            }
+        };
+
+        this.backgroundAudio2.addEventListener('canplaythrough', () => {
+            console.log('Background music 2 loaded successfully');
+        });
+
+        this.backgroundAudio2.addEventListener('error', () => {
+            console.log(`Background music 2 format failed, trying next...`);
+            tryNextFormat();
+        });
+
+        // Start with first format
+        tryNextFormat();
+    }
+
+    private loadBackgroundMusic3() {
+        if (!this.backgroundAudio3) return;
+
+        // Try different audio formats
+        const audioFormats = [
+            '/sounds/background-music3.mp3',
+            '/sounds/background-music3.ogg',
+            '/sounds/background-music3.wav'
+        ];
+
+        let currentFormatIndex = 0;
+
+        const tryNextFormat = () => {
+            if (currentFormatIndex < audioFormats.length) {
+                this.backgroundAudio3!.src = audioFormats[currentFormatIndex];
+                currentFormatIndex++;
+            } else {
+                console.log('All background music 3 formats failed');
+            }
+        };
+
+        this.backgroundAudio3.addEventListener('canplaythrough', () => {
+            console.log('Background music 3 loaded successfully');
+        });
+
+        this.backgroundAudio3.addEventListener('error', () => {
+            console.log(`Background music 3 format failed, trying next...`);
+            tryNextFormat();
+        });
+
+        // Start with first format
+        tryNextFormat();
+    }
+
+    private loadBackgroundMusic4() {
+        if (!this.backgroundAudio4) return;
+
+        // Try different audio formats
+        const audioFormats = [
+            '/sounds/background-music4.mp3',
+            '/sounds/background-music4.ogg',
+            '/sounds/background-music4.wav'
+        ];
+
+        let currentFormatIndex = 0;
+
+        const tryNextFormat = () => {
+            if (currentFormatIndex < audioFormats.length) {
+                this.backgroundAudio4!.src = audioFormats[currentFormatIndex];
+                currentFormatIndex++;
+            } else {
+                console.log('All background music 4 formats failed');
+            }
+        };
+
+        this.backgroundAudio4.addEventListener('canplaythrough', () => {
+            console.log('Background music 4 loaded successfully');
+        });
+
+        this.backgroundAudio4.addEventListener('error', () => {
+            console.log(`Background music 4 format failed, trying next...`);
             tryNextFormat();
         });
 
@@ -632,6 +759,69 @@ export class AudioManager {
             // Then fade out for smooth transition
             this.fadeOut(this.backgroundAudio, this.volume, 0, 1000);
         }
+        // Also stop other background tracks
+        if (this.backgroundAudio2) {
+            this.backgroundAudio2.pause();
+        }
+        if (this.backgroundAudio3) {
+            this.backgroundAudio3.pause();
+        }
+        if (this.backgroundAudio4) {
+            this.backgroundAudio4.pause();
+        }
+    }
+
+    public changeBackgroundMusicByLevel(level: number) {
+        console.log(`Changing background music for level ${level}...`);
+        
+        // Determine which track to play based on level
+        let targetTrack = 1;
+        if (level >= 15) {
+            targetTrack = 4;
+        } else if (level >= 10) {
+            targetTrack = 3;
+        } else if (level >= 5) {
+            targetTrack = 2;
+        }
+        
+        // If we're already playing the correct track, don't change
+        if (this.currentBackgroundTrack === targetTrack) {
+            console.log(`Already playing background track ${targetTrack}`);
+            return;
+        }
+        
+        // Stop current background music
+        this.stopBackgroundMusic();
+        
+        // Start the appropriate track
+        let targetAudio: HTMLAudioElement | null = null;
+        switch (targetTrack) {
+            case 1:
+                targetAudio = this.backgroundAudio;
+                break;
+            case 2:
+                targetAudio = this.backgroundAudio2;
+                break;
+            case 3:
+                targetAudio = this.backgroundAudio3;
+                break;
+            case 4:
+                targetAudio = this.backgroundAudio4;
+                break;
+        }
+        
+        if (targetAudio && targetAudio.readyState >= 2) {
+            console.log(`Starting background track ${targetTrack}...`);
+            targetAudio.volume = 0; // Start at 0 for fade-in
+            targetAudio.play().then(() => {
+                this.fadeIn(targetAudio!, 0, this.volume, 2000);
+                this.currentBackgroundTrack = targetTrack;
+            }).catch(error => {
+                console.log(`Background track ${targetTrack} playback failed:`, error);
+            });
+        } else {
+            console.log(`Background track ${targetTrack} not ready`);
+        }
     }
 
     public playLossMusic() {
@@ -975,6 +1165,18 @@ export class AudioManager {
         if (this.backgroundAudio) {
             this.backgroundAudio.pause();
             this.backgroundAudio = null;
+        }
+        if (this.backgroundAudio2) {
+            this.backgroundAudio2.pause();
+            this.backgroundAudio2 = null;
+        }
+        if (this.backgroundAudio3) {
+            this.backgroundAudio3.pause();
+            this.backgroundAudio3 = null;
+        }
+        if (this.backgroundAudio4) {
+            this.backgroundAudio4.pause();
+            this.backgroundAudio4 = null;
         }
         if (this.lossAudio) {
             this.lossAudio.pause();

@@ -350,6 +350,11 @@ export class Game {
         this.speedMultiplier += 0.1;
         this.bubbleSpawnInterval = Math.max(1000, this.bubbleSpawnInterval - 100);
         this.updateUI();
+        
+        // Change background music based on level
+        if (audioManager) {
+            audioManager.changeBackgroundMusicByLevel(this.level);
+        }
     }
 
     private spawnBubble(): void {
