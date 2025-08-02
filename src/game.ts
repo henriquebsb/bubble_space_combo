@@ -20,6 +20,7 @@ export class Game {
     private level: number = 1;
     private playerNameDefault: string = 'Unnamed';
     private gameRunning: boolean = false;
+    private gamePaused: boolean = false;
     private animationId: number = 0;
     private lastBubbleTime: number = 0;
     private bubbleSpawnInterval: number = 2000;
@@ -74,6 +75,14 @@ export class Game {
         if (endGameBtn) {
             endGameBtn.addEventListener('click', () => {
                 this.endGame();
+            });
+        }
+
+        // Handle pause/resume button
+        const pauseBtn = document.getElementById('pauseBtn');
+        if (pauseBtn) {
+            pauseBtn.addEventListener('click', () => {
+                this.togglePause();
             });
         }
 
@@ -180,10 +189,16 @@ export class Game {
         if (endGameBtn) {
             endGameBtn.style.display = 'none';
         }
+        
+        // Hide pause button
+        const pauseBtn = document.getElementById('pauseBtn');
+        if (pauseBtn) {
+            pauseBtn.style.display = 'none';
+        }
     }
 
     private handleClick(e: MouseEvent): void {
-        if (!this.gameRunning) return;
+        if (!this.gameRunning || this.gamePaused) return;
 
         const rect = this.canvas.getBoundingClientRect();
         const x = e.clientX - rect.left;
@@ -420,10 +435,16 @@ export class Game {
 
     private render(): void {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        this.bubbles.forEach(bubble => bubble.render(this.ctx));
+        
+        if (!this.gamePaused) {
+            this.bubbles.forEach(bubble => bubble.render(this.ctx));
 
-        if (this.currentMathProblem) {
-            this.renderMathProblem();
+            if (this.currentMathProblem) {
+                this.renderMathProblem();
+            }
+        } else {
+            // Show pause overlay
+            this.renderPauseOverlay();
         }
     }
 
@@ -443,15 +464,58 @@ export class Game {
         this.ctx.fillText('Click the bubble with the correct answer!', this.canvas.width / 2, this.canvas.height - 15);
     }
 
+    private renderPauseOverlay(): void {
+        // Semi-transparent overlay
+        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        
+        // Pause text
+        this.ctx.fillStyle = '#FFFFFF';
+        this.ctx.font = 'bold 48px Arial';
+        this.ctx.textAlign = 'center';
+        this.ctx.textBaseline = 'middle';
+        this.ctx.fillText('⏸️ PAUSED', this.canvas.width / 2, this.canvas.height / 2 - 50);
+        
+        this.ctx.font = '24px Arial';
+        this.ctx.fillText('Click Pause button to resume', this.canvas.width / 2, this.canvas.height / 2 + 20);
+    }
+
+    private togglePause(): void {
+        if (!this.gameRunning) return;
+        
+        this.gamePaused = !this.gamePaused;
+        
+        // Update pause button text
+        const pauseBtn = document.getElementById('pauseBtn');
+        if (pauseBtn) {
+            pauseBtn.textContent = this.gamePaused ? '▶️ Resume' : '⏸️ Pause';
+        }
+        
+        if (this.gamePaused) {
+            // Stop background music when paused
+            if (audioManager) {
+                audioManager.stopBackgroundMusic();
+            }
+        } else {
+            // Resume background music when unpaused
+            if (audioManager) {
+                audioManager.startGameMusic();
+            }
+        }
+    }
+
     private gameLoop(currentTime: number): void {
         if (!this.gameRunning) return;
 
-        if (currentTime - this.lastBubbleTime > this.bubbleSpawnInterval) {
-            this.spawnBubble();
-            this.lastBubbleTime = currentTime;
+        if (!this.gamePaused) {
+            if (currentTime - this.lastBubbleTime > this.bubbleSpawnInterval) {
+                this.spawnBubble();
+                this.lastBubbleTime = currentTime;
+            }
+
+            this.updateBubbles();
         }
 
-        this.updateBubbles();
         this.render();
 
         this.animationId = requestAnimationFrame((time) => this.gameLoop(time));
@@ -515,6 +579,7 @@ export class Game {
         this.speedMultiplier = 0.8;
         this.bubbleSpawnInterval = 2000;
         this.currentMathProblem = null;
+        this.gamePaused = false;
         
         // Reset combo system
         this.comboCount = 0;
@@ -1002,6 +1067,7 @@ export class Game {
         this.speedMultiplier = 0.8;
         this.bubbleSpawnInterval = 2000;
         this.currentMathProblem = null;
+        this.gamePaused = false;
         
         // Reset combo system
         this.comboCount = 0;
@@ -1016,6 +1082,12 @@ export class Game {
         const endGameBtn = document.getElementById('endGameBtn');
         if (endGameBtn) {
             endGameBtn.style.display = 'none';
+        }
+        
+        // Hide pause button
+        const pauseBtn = document.getElementById('pauseBtn');
+        if (pauseBtn) {
+            pauseBtn.style.display = 'none';
         }
 
         // Show operator selection
@@ -1036,6 +1108,12 @@ export class Game {
         const endGameBtn = document.getElementById('endGameBtn');
         if (endGameBtn) {
             endGameBtn.style.display = 'block';
+        }
+        
+        // Show pause button
+        const pauseBtn = document.getElementById('pauseBtn');
+        if (pauseBtn) {
+            pauseBtn.style.display = 'block';
         }
         
         this.gameLoop(performance.now());
@@ -1059,6 +1137,7 @@ export class Game {
         this.speedMultiplier = 0.8;
         this.bubbleSpawnInterval = 2000;
         this.currentMathProblem = null;
+        this.gamePaused = false;
         
         // Reset combo system
         this.comboCount = 0;
