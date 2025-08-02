@@ -17,18 +17,21 @@ A fun web game where you solve math problems by clicking the correct falling bub
 ## How to Play
 
 1. **Objective**: Solve math equations by clicking the bubble with the correct answer
-2. **Scoring**: Each correct answer gives you 20 points
-3. **Combo System**: Answer correctly within 3.5 seconds for 3+ times in a row to achieve combos:
-   - Triple Combo (3): +60 points
-   - Super Combo (4): +80 points
-   - Hyper Combo (5): +100 points
-   - Brutal Combo (6): +120 points
-   - Master Combo (7): +140 points
-   - Awesome Combo (8): +160 points
-   - Blaster Combo (9): +180 points
-   - Monster Combo (10): +200 points
-   - King Combo (11): +220 points
-   - Ultra Combo (12): +240 points
+2. **Scoring**: Points awarded based on difficulty:
+   - Easy: 20 points per correct answer
+   - Medium: 60 points per correct answer
+   - Hard: 180 points per correct answer
+3. **Combo System**: Answer correctly within 3.5 seconds for 3+ times in a row to achieve combos. Combo points are multiplied by your difficulty base points:
+   - Triple Combo (3): 3x base points
+   - Super Combo (4): 4x base points
+   - Hyper Combo (5): 5x base points
+   - Brutal Combo (6): 6x base points
+   - Master Combo (7): 7x base points
+   - Awesome Combo (8): 8x base points
+   - Blaster Combo (9): 9x base points
+   - Monster Combo (10): 10x base points
+   - King Combo (11): 11x base points
+   - Ultra Combo (12): 12x base points
 4. **Lives**: You start with 3 lives. If the correct answer bubble reaches the bottom, you lose a life
 5. **Leveling Up**: Every 100 points, you level up and the game gets faster
 6. **Background Music**: Changes automatically at levels 5, 10, and 15

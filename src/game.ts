@@ -213,49 +213,50 @@ export class Game {
                             let comboType = '';
                             let points = 0;
                             let audioEffect = '';
+                            const basePoints = this.getBasePointsForDifficulty();
                             
                             // Determine combo type and rewards
                             if (this.comboCount >= 12) {
                                 comboType = 'Ultra Combo';
-                                points = 240; // 20 * 12
+                                points = basePoints * 12;
                                 audioEffect = 'ultra_combo';
                                 // Reset combo count after achieving the highest combo
                                 this.comboCount = 0;
                             } else if (this.comboCount >= 11) {
                                 comboType = 'King Combo';
-                                points = 220; // 20 * 11
+                                points = basePoints * 11;
                                 audioEffect = 'king_combo';
                             } else if (this.comboCount >= 10) {
                                 comboType = 'Monster Combo';
-                                points = 200; // 20 * 10
+                                points = basePoints * 10;
                                 audioEffect = 'monster_combo';
                             } else if (this.comboCount >= 9) {
                                 comboType = 'Blaster Combo';
-                                points = 180; // 20 * 9
+                                points = basePoints * 9;
                                 audioEffect = 'blaster_combo';
                             } else if (this.comboCount >= 8) {
                                 comboType = 'Awesome Combo';
-                                points = 160; // 20 * 8
+                                points = basePoints * 8;
                                 audioEffect = 'awesome_combo';
                             } else if (this.comboCount >= 7) {
                                 comboType = 'Master Combo';
-                                points = 140; // 20 * 7
+                                points = basePoints * 7;
                                 audioEffect = 'master_combo';
                             } else if (this.comboCount >= 6) {
                                 comboType = 'Brutal Combo';
-                                points = 120; // 20 * 6
+                                points = basePoints * 6;
                                 audioEffect = 'brutal_combo';
                             } else if (this.comboCount >= 5) {
                                 comboType = 'Hyper Combo';
-                                points = 100; // 20 * 5
+                                points = basePoints * 5;
                                 audioEffect = 'hyper_combo';
                             } else if (this.comboCount >= 4) {
                                 comboType = 'Super Combo';
-                                points = 80; // 20 * 4
+                                points = basePoints * 4;
                                 audioEffect = 'super_combo';
                             } else if (this.comboCount >= 3) {
                                 comboType = 'Triple Combo';
-                                points = 60; // 20 * 3
+                                points = basePoints * 3;
                                 audioEffect = 'triple_combo';
                             }
                             
@@ -268,9 +269,10 @@ export class Game {
                             // Don't reset combo count - let it continue for higher combos
                             console.log(`${comboType} achieved! +${points} points`);
                         } else {
-                            // Regular correct answer
-                            this.score += 20;
-                            console.log(`Combo ${this.comboCount}/3! +20 points`);
+                            // Regular correct answer - award points based on difficulty
+                            const basePoints = this.getBasePointsForDifficulty();
+                            this.score += basePoints;
+                            console.log(`Combo ${this.comboCount}/3! +${basePoints} points`);
                         }
                     } else {
                         // Too much time passed, check if player had a combo and broke it
@@ -285,8 +287,9 @@ export class Game {
                         // Too much time passed, reset combo
                         this.comboCount = 1;
                         this.lastCorrectTime = currentTime;
-                        this.score += 20;
-                        console.log('Combo reset! +20 points');
+                        const basePoints = this.getBasePointsForDifficulty();
+                        this.score += basePoints;
+                        console.log(`Combo reset! +${basePoints} points`);
                     }
                     
                     this.currentMathProblem = new MathProblem(this.selectedOperators, this.maxDigits);
@@ -577,6 +580,15 @@ export class Game {
             case 2: return 'Medium';
             case 3: return 'Hard';
             default: return 'Easy';
+        }
+    }
+
+    private getBasePointsForDifficulty(): number {
+        switch (this.maxDigits) {
+            case 1: return 20; // Easy
+            case 2: return 60; // Medium
+            case 3: return 180; // Hard
+            default: return 20; // Default to Easy
         }
     }
 
