@@ -31,8 +31,9 @@ export class Game {
     // Combo system properties
     private comboCount: number = 0;
     private lastCorrectTime: number = 0;
-    private comboTimeWindow: number = 9000; // 9 seconds in milliseconds
+    private comboTimeWindow: number = 3500; // 3.5 seconds in milliseconds
     private hadCombo: boolean = false; // Track if player had achieved a combo
+    private previousScore: number = 0; // Track previous score for level-up detection
 
     constructor() {
         this.setupCanvas();
@@ -330,9 +331,15 @@ export class Game {
                 
                 this.updateUI();
                 
-                if (this.score % 100 === 0 && this.score > 0) {
+                // Check if we should level up (crossed a 100-point threshold)
+                const previousLevel = Math.floor(this.previousScore / 100) + 1;
+                const currentLevel = Math.floor(this.score / 100) + 1;
+                
+                if (currentLevel > previousLevel && this.score > 0) {
                     this.levelUp();
                 }
+                
+                this.previousScore = this.score;
                 return;
             }
         }
@@ -505,6 +512,7 @@ export class Game {
         this.comboCount = 0;
         this.lastCorrectTime = 0;
         this.hadCombo = false;
+        this.previousScore = 0;
 
         // Update UI to reflect reset state
         this.updateUI();
@@ -766,6 +774,7 @@ export class Game {
         this.comboCount = 0;
         this.lastCorrectTime = 0;
         this.hadCombo = false;
+        this.previousScore = 0;
 
         // Update UI to reflect reset state
         this.updateUI();
@@ -822,6 +831,7 @@ export class Game {
         this.comboCount = 0;
         this.lastCorrectTime = 0;
         this.hadCombo = false;
+        this.previousScore = 0;
 
         // Update UI to reflect reset state
         this.updateUI();
