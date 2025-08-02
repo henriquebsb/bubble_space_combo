@@ -490,8 +490,8 @@ export class Game {
                 operators: this.selectedOperators,
                 difficulty: this.getDifficultyName()
             };
-            this.saveScoreWithName(currentScore).then(() => {
-                // Show game over screen with rankings after name is entered
+            this.saveScoreWithName(currentScore).then((playerName) => {
+                currentScore.playerName = playerName; // Update the score object with the actual name
                 this.showGameOverScreen(currentScore);
             });
         } else {
@@ -747,9 +747,11 @@ export class Game {
         cancelBtn.addEventListener('click', cleanup);
     }
 
-    private async saveScoreWithName(score: PlayerScore): Promise<void> {
-        score.playerName = await this.promptForPlayerName();
+    private async saveScoreWithName(score: PlayerScore): Promise<string> {
+        const playerName = await this.promptForPlayerName();
+        score.playerName = playerName;
         this.saveScore(score);
+        return playerName;
     }
 
     private saveScore(score: PlayerScore): void {
