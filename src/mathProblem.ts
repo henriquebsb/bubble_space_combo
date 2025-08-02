@@ -37,15 +37,25 @@ export class MathProblem {
                 this.correctAnswer = num1 * num2;
                 break;
             case '/':
-                // For division, ensure whole number result and both numbers within range
-                num1 = Math.floor(Math.random() * maxNumber) + 1;
-                num2 = Math.floor(Math.random() * maxNumber) + 1;
-                this.correctAnswer = Math.floor(num1 / num2);
-                // Ensure we have a whole number result
-                if (this.correctAnswer === 0) {
-                    this.correctAnswer = 1;
+                // For division, ensure whole number result and prevent infinite loops
+                if (this.maxDigits > 1) {
+                    // For Medium and Hard, generate num2 first, then find a suitable num1
+                    do {
+                        num2 = Math.floor(Math.random() * maxNumber) + 1;
+                        // Generate a random quotient that won't exceed maxNumber when multiplied
+                        const maxQuotient = Math.floor(maxNumber / num2);
+                        const quotient = Math.floor(Math.random() * Math.max(1, maxQuotient)) + 1;
+                        num1 = quotient * num2;
+                    } while (num1 === num2);
+                } else {
+                    // For Easy, use simple logic
+                    num2 = Math.floor(Math.random() * maxNumber) + 1;
+                    const maxQuotient = Math.floor(maxNumber / num2);
+                    const quotient = Math.floor(Math.random() * Math.max(1, maxQuotient)) + 1;
+                    num1 = quotient * num2;
                 }
-                num1 = this.correctAnswer * num2;
+                
+                this.correctAnswer = num1 / num2;
                 break;
             default:
                 // Fallback to addition
