@@ -167,9 +167,9 @@ export class AudioManager {
 
         // Try different audio formats
         const audioFormats = [
-            '/sounds/background-music.mp3',
-            '/sounds/background-music.ogg',
-            '/sounds/background-music.wav'
+            './sounds/background-music.mp3',
+            './sounds/background-music.ogg',
+            './sounds/background-music.wav'
         ];
 
         let currentFormatIndex = 0;
@@ -203,9 +203,9 @@ export class AudioManager {
 
         // Try different audio formats
         const audioFormats = [
-            '/sounds/background-music2.mp3',
-            '/sounds/background-music2.ogg',
-            '/sounds/background-music2.wav'
+            './sounds/background-music2.mp3',
+            './sounds/background-music2.ogg',
+            './sounds/background-music2.wav'
         ];
 
         let currentFormatIndex = 0;
@@ -237,9 +237,9 @@ export class AudioManager {
 
         // Try different audio formats
         const audioFormats = [
-            '/sounds/background-music3.mp3',
-            '/sounds/background-music3.ogg',
-            '/sounds/background-music3.wav'
+            './sounds/background-music3.mp3',
+            './sounds/background-music3.ogg',
+            './sounds/background-music3.wav'
         ];
 
         let currentFormatIndex = 0;
@@ -271,9 +271,9 @@ export class AudioManager {
 
         // Try different audio formats
         const audioFormats = [
-            '/sounds/background-music4.mp3',
-            '/sounds/background-music4.ogg',
-            '/sounds/background-music4.wav'
+            './sounds/background-music4.mp3',
+            './sounds/background-music4.ogg',
+            './sounds/background-music4.wav'
         ];
 
         let currentFormatIndex = 0;
@@ -305,9 +305,9 @@ export class AudioManager {
 
         // Try different audio formats for loss music
         const lossAudioFormats = [
-            '/sounds/loss-music.mp3',
-            '/sounds/loss-music.ogg',
-            '/sounds/loss-music.wav'
+            './sounds/loss-music.mp3',
+            './sounds/loss-music.ogg',
+            './sounds/loss-music.wav'
         ];
 
         let currentFormatIndex = 0;
@@ -339,9 +339,9 @@ export class AudioManager {
 
         // Try different audio formats for triple combo audio
         const tripleComboAudioFormats = [
-            '/sounds/triple-combo.mp3',
-            '/sounds/triple-combo.ogg',
-            '/sounds/triple-combo.wav'
+            './sounds/triple-combo.mp3',
+            './sounds/triple-combo.ogg',
+            './sounds/triple-combo.wav'
         ];
 
         let currentFormatIndex = 0;
@@ -373,9 +373,9 @@ export class AudioManager {
 
         // Try different audio formats for super combo audio
         const superComboAudioFormats = [
-            '/sounds/4-super-combo.mp3',
-            '/sounds/4-super-combo.ogg',
-            '/sounds/4-super-combo.wav'
+            './sounds/4-super-combo.mp3',
+            './sounds/4-super-combo.ogg',
+            './sounds/4-super-combo.wav'
         ];
 
         let currentFormatIndex = 0;
@@ -407,9 +407,9 @@ export class AudioManager {
 
         // Try different audio formats for hyper combo audio
         const hyperComboAudioFormats = [
-            '/sounds/5-hyper-combo.mp3',
-            '/sounds/5-hyper-combo.ogg',
-            '/sounds/5-hyper-combo.wav'
+            './sounds/5-hyper-combo.mp3',
+            './sounds/5-hyper-combo.ogg',
+            './sounds/5-hyper-combo.wav'
         ];
 
         let currentFormatIndex = 0;
@@ -441,9 +441,9 @@ export class AudioManager {
 
         // Try different audio formats for brutal combo audio
         const brutalComboAudioFormats = [
-            '/sounds/6-brutal-combo.mp3',
-            '/sounds/6-brutal-combo.ogg',
-            '/sounds/6-brutal-combo.wav'
+            './sounds/6-brutal-combo.mp3',
+            './sounds/6-brutal-combo.ogg',
+            './sounds/6-brutal-combo.wav'
         ];
 
         let currentFormatIndex = 0;
@@ -475,9 +475,9 @@ export class AudioManager {
 
         // Try different audio formats for master combo audio
         const masterComboAudioFormats = [
-            '/sounds/7-master-combo.mp3',
-            '/sounds/7-master-combo.ogg',
-            '/sounds/7-master-combo.wav'
+            './sounds/7-master-combo.mp3',
+            './sounds/7-master-combo.ogg',
+            './sounds/7-master-combo.wav'
         ];
 
         let currentFormatIndex = 0;
@@ -509,9 +509,9 @@ export class AudioManager {
 
         // Try different audio formats for awesome combo audio
         const awesomeComboAudioFormats = [
-            '/sounds/8-awesome-combo.mp3',
-            '/sounds/8-awesome-combo.ogg',
-            '/sounds/8-awesome-combo.wav'
+            './sounds/8-awesome-combo.mp3',
+            './sounds/8-awesome-combo.ogg',
+            './sounds/8-awesome-combo.wav'
         ];
 
         let currentFormatIndex = 0;
@@ -543,9 +543,9 @@ export class AudioManager {
 
         // Try different audio formats for blaster combo audio
         const blasterComboAudioFormats = [
-            '/sounds/9-blaster-combo.mp3',
-            '/sounds/9-blaster-combo.ogg',
-            '/sounds/9-blaster-combo.wav'
+            './sounds/9-blaster-combo.mp3',
+            './sounds/9-blaster-combo.ogg',
+            './sounds/9-blaster-combo.wav'
         ];
 
         let currentFormatIndex = 0;
@@ -577,9 +577,9 @@ export class AudioManager {
 
         // Try different audio formats for monster combo audio
         const monsterComboAudioFormats = [
-            '/sounds/10-monster-combo.mp3',
-            '/sounds/10-monster-combo.ogg',
-            '/sounds/10-monster-combo.wav'
+            './sounds/10-monster-combo.mp3',
+            './sounds/10-monster-combo.ogg',
+            './sounds/10-monster-combo.wav'
         ];
 
         let currentFormatIndex = 0;
@@ -611,9 +611,9 @@ export class AudioManager {
 
         // Try different audio formats for king combo audio
         const kingComboAudioFormats = [
-            '/sounds/11-king-combo.mp3',
-            '/sounds/11-king-combo.ogg',
-            '/sounds/11-king-combo.wav'
+            './sounds/11-king-combo.mp3',
+            './sounds/11-king-combo.ogg',
+            './sounds/11-king-combo.wav'
         ];
 
         let currentFormatIndex = 0;
@@ -645,9 +645,9 @@ export class AudioManager {
 
         // Try different audio formats for ultra combo audio
         const ultraComboAudioFormats = [
-            '/sounds/12-ultra-combo.mp3',
-            '/sounds/12-ultra-combo.ogg',
-            '/sounds/12-ultra-combo.wav'
+            './sounds/12-ultra-combo.mp3',
+            './sounds/12-ultra-combo.ogg',
+            './sounds/12-ultra-combo.wav'
         ];
 
         let currentFormatIndex = 0;
@@ -679,9 +679,9 @@ export class AudioManager {
 
         // Try different audio formats for combo breaker audio
         const comboBreakerAudioFormats = [
-            '/sounds/combo-breaker.mp3',
-            '/sounds/combo-breaker.ogg',
-            '/sounds/combo-breaker.wav'
+            './sounds/combo-breaker.mp3',
+            './sounds/combo-breaker.ogg',
+            './sounds/combo-breaker.wav'
         ];
 
         let currentFormatIndex = 0;

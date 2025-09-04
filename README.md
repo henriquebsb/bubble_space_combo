@@ -61,11 +61,20 @@ Make sure you have Node.js installed on your system.
 
 To build the game for production:
 
+look vite.configs.ts for more options
+
+run 
 ```bash
 npm run build
 ```
 
 The built files will be in the `dist` folder.
+
+inside `dist` remove line 335 and put this line below:
+  ```js 
+  <script src="./assets/index-9a583cf7.js"></script>
+  ```
+
 
 ## Game Controls
 
